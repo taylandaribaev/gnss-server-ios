@@ -25,7 +25,7 @@ final class LiveActivityService {
 
             let attributes = LocationSharingActivityAttributes(port: 8887)
             let state = LocationSharingActivityAttributes.ContentState(
-                status: "Ожидание геопозиции",
+                status: L10n.tr("liveActivity.awaitingLocation"),
                 clientCount: clientCount,
                 lastLocationUpdate: nil
             )
@@ -73,7 +73,7 @@ final class LiveActivityService {
         AppLogger.shared.info(.liveActivity, "Stopping Live Activity")
         shouldBeActive = false
         let finalState = LocationSharingActivityAttributes.ContentState(
-            status: "Сервер остановлен",
+            status: L10n.tr("liveActivity.serverStopped"),
             clientCount: 0,
             lastLocationUpdate: nil
         )

@@ -23,11 +23,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Локальная сеть нужна, чтобы другие устройства могли подключаться к GNSS-серверу на этом iPhone.</string>
+	<string>Local network access is needed so other devices can connect to the GNSS server on this iPhone.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Фоновая геолокация нужна, чтобы продолжать передавать координаты подключённым клиентам, когда экран заблокирован.</string>
+	<string>Background location is needed to keep sending coordinates to connected clients when the screen is locked.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Геолокация нужна, чтобы передавать текущие координаты подключённым GNSS-клиентам.</string>
+	<string>Location access is needed to send current coordinates to connected GNSS clients.</string>
 	<key>NSSupportsLiveActivities</key>
 	<true/>
 	<key>UIBackgroundModes</key>

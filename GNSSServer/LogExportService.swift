@@ -22,17 +22,17 @@ enum LogExportService {
         context: LogExportContext
     ) -> String {
         var lines: [String] = [
-            "GNSS Server diagnostics",
-            "Server running: \(context.isRunning ? "yes" : "no")",
-            "Clients: \(context.connectedClientCount)",
-            "IP: \(context.localIPAddresses.isEmpty ? "not found" : context.localIPAddresses.joined(separator: ", "))",
-            "Port: \(context.port)",
-            "Location permission: \(context.locationAuthorizationText)",
-            "Accuracy: \(context.accuracyText)",
+            L10n.tr("briefDiagnostics.title"),
+            String(format: L10n.tr("briefDiagnostics.serverRunning"), context.isRunning ? L10n.tr("common.yes") : L10n.tr("common.no")),
+            String(format: L10n.tr("briefDiagnostics.clients"), context.connectedClientCount),
+            String(format: L10n.tr("briefDiagnostics.ip"), context.localIPAddresses.isEmpty ? L10n.tr("server.ipNotFound") : context.localIPAddresses.joined(separator: ", ")),
+            String(format: L10n.tr("briefDiagnostics.port"), context.port),
+            String(format: L10n.tr("briefDiagnostics.locationPermission"), context.locationAuthorizationText),
+            String(format: L10n.tr("briefDiagnostics.accuracy"), context.accuracyText),
             ""
         ]
 
-        lines.append("Items:")
+        lines.append(L10n.tr("briefDiagnostics.items"))
         for item in diagnostics {
             lines.append("- \(item.title): \(item.action)")
         }

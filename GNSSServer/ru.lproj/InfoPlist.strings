@@ -1,0 +1,3 @@
+"NSLocalNetworkUsageDescription" = "Локальная сеть нужна, чтобы другие устройства могли подключаться к GNSS-серверу на этом iPhone.";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Фоновая геолокация нужна, чтобы продолжать передавать координаты подключённым клиентам, когда экран заблокирован.";
+"NSLocationWhenInUseUsageDescription" = "Геолокация нужна, чтобы передавать текущие координаты подключённым GNSS-клиентам.";

@@ -25,6 +25,11 @@
 		100000000000000000000011 /* GNSSServerLiveActivity.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 200000000000000000000013 /* GNSSServerLiveActivity.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		100000000000000000000012 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000014 /* AppLogger.swift */; };
 		100000000000000000000013 /* LogExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000015 /* LogExportService.swift */; };
+		100000000000000000000014 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000016 /* Localization.swift */; };
+		100000000000000000000015 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000016 /* Localization.swift */; };
+		100000000000000000000016 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000001 /* Localizable.strings */; };
+		100000000000000000000017 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000001 /* Localizable.strings */; };
+		100000000000000000000018 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000002 /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +77,11 @@
 		200000000000000000000013 /* GNSSServerLiveActivity.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GNSSServerLiveActivity.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		200000000000000000000014 /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
 		200000000000000000000015 /* LogExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogExportService.swift; sourceTree = "<group>"; };
+		200000000000000000000016 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
+		200000000000000000000017 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		200000000000000000000018 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		200000000000000000000019 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		20000000000000000000001A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +116,7 @@
 			children = (
 				200000000000000000000001 /* GNSSServerApp.swift */,
 				200000000000000000000002 /* ContentView.swift */,
+				200000000000000000000016 /* Localization.swift */,
 				200000000000000000000014 /* AppLogger.swift */,
 				200000000000000000000015 /* LogExportService.swift */,
 				200000000000000000000009 /* ServerCoordinator.swift */,
@@ -117,6 +128,8 @@
 				200000000000000000000003 /* Models.swift */,
 				20000000000000000000000E /* LocationSharingActivityAttributes.swift */,
 				20000000000000000000000F /* LiveActivityService.swift */,
+				B00000000000000000000001 /* Localizable.strings */,
+				B00000000000000000000002 /* InfoPlist.strings */,
 				20000000000000000000000A /* Info.plist */,
 				20000000000000000000000B /* Assets.xcassets */,
 			);
@@ -206,6 +219,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 400000000000000000000001;
 			productRefGroup = 400000000000000000000003 /* Products */;
@@ -223,6 +237,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				100000000000000000000016 /* Localizable.strings in Resources */,
+				100000000000000000000018 /* InfoPlist.strings in Resources */,
 				10000000000000000000000A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -231,6 +247,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				100000000000000000000017 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,6 +271,7 @@
 				10000000000000000000000D /* LiveActivityService.swift in Sources */,
 				100000000000000000000012 /* AppLogger.swift in Sources */,
 				100000000000000000000013 /* LogExportService.swift in Sources */,
+				100000000000000000000014 /* Localization.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,10 +282,32 @@
 				10000000000000000000000E /* GNSSServerLiveActivityBundle.swift in Sources */,
 				10000000000000000000000F /* GNSSServerLiveActivity.swift in Sources */,
 				100000000000000000000010 /* LocationSharingActivityAttributes.swift in Sources */,
+				100000000000000000000015 /* Localization.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		B00000000000000000000001 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				200000000000000000000017 /* en */,
+				200000000000000000000018 /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		B00000000000000000000002 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				200000000000000000000019 /* en */,
+				20000000000000000000001A /* ru */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin PBXTargetDependency section */
 		A00000000000000000000003 /* PBXTargetDependency */ = {

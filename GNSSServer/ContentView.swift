@@ -14,17 +14,17 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Сервер") {
-                    LabeledContent("Состояние", value: coordinator.statusText)
-                    SelectableValueRow(label: "TCP-порт", value: "8887")
-                    LabeledContent("Клиентов", value: "\(coordinator.connectedClientCount)")
+                Section(L10n.tr("section.server")) {
+                    LabeledContent(L10n.tr("server.state"), value: coordinator.statusText)
+                    SelectableValueRow(label: L10n.tr("server.tcpPort"), value: "8887")
+                    LabeledContent(L10n.tr("server.clients"), value: "\(coordinator.connectedClientCount)")
 
                     if coordinator.localIPAddresses.isEmpty {
-                        LabeledContent("IP-адрес", value: "Не найден")
+                        LabeledContent(L10n.tr("server.ipAddress"), value: L10n.tr("server.ipNotFound"))
                     } else {
                         ForEach(Array(coordinator.localIPAddresses.enumerated()), id: \.element) { index, address in
                             SelectableValueRow(
-                                label: index == 0 ? "IP-адрес" : "Другой IP",
+                                label: index == 0 ? L10n.tr("server.ipAddress") : L10n.tr("server.otherIp"),
                                 value: address
                             )
                         }
@@ -34,77 +34,79 @@ struct ContentView: View {
                         Label(error, systemImage: "exclamationmark.triangle")
                     }
 
-                    Button(coordinator.isRunning ? "Остановить сервер" : "Запустить сервер", role: coordinator.isRunning ? .destructive : nil) {
+                    Button(
+                        coordinator.isRunning ? L10n.tr("server.stop") : L10n.tr("server.start"),
+                        role: coordinator.isRunning ? .destructive : nil
+                    ) {
                         handleServerButton()
                     }
                 }
 
-                Section("Геолокация") {
-                    LabeledContent("Разрешение", value: coordinator.locationAuthorizationText)
-                    LabeledContent("Точность", value: coordinator.precisionText)
+                Section(L10n.tr("section.location")) {
+                    LabeledContent(L10n.tr("location.permission"), value: coordinator.locationAuthorizationText)
+                    LabeledContent(L10n.tr("location.precision"), value: coordinator.precisionText)
 
                     if let location = coordinator.lastLocation {
                         SelectableValueRow(
-                            label: "Координаты",
+                            label: L10n.tr("location.coordinates"),
                             value: String(format: "%.6f, %.6f", location.latitude, location.longitude)
                         )
                         LabeledContent(
-                            "Погрешность",
-                            value: String(format: "%.1f м", location.accuracy)
+                            L10n.tr("location.accuracy"),
+                            value: String(format: L10n.tr("location.accuracyValue"), location.accuracy)
                         )
                     } else {
-                        Text("Координаты ещё не получены")
+                        Text(L10n.tr("location.noCoordinates"))
                             .foregroundStyle(.secondary)
                     }
 
                     if coordinator.shouldShowLocationPermissionButton {
-                        Button("Запросить разрешения") {
+                        Button(L10n.tr("location.requestPermissions")) {
                             handlePermissionButton()
                         }
                     }
                 }
+                
+                Section {
+                    NavigationLink {
+                        SetupGuideView()
+                    } label: {
+                        Label(L10n.tr("setup.linkTitle"), systemImage: "questionmark.circle")
+                    }
+                }
 
-                Section("Диагностика") {
+                Section(L10n.tr("section.diagnostics")) {
                     ForEach(diagnostics) { item in
                         DiagnosticRow(item: item)
                     }
 
                     Toggle(
-                        "Включать точные координаты в экспорт логов",
+                        L10n.tr("diagnostics.includePreciseCoordinates"),
                         isOn: $includePreciseCoordinatesInLogExport
                     )
 
-                    Button("Скопировать краткую диагностику") {
+                    Button(L10n.tr("diagnostics.copyBrief")) {
                         copyBriefDiagnostics()
                     }
 
-                    Button("Поделиться лог-файлом") {
+                    Button(L10n.tr("diagnostics.shareLog")) {
                         shareLogFile()
                     }
 
-                    Button("Очистить логи", role: .destructive) {
+                    Button(L10n.tr("diagnostics.clearLogs"), role: .destructive) {
                         AppLogger.shared.clear()
-                        showToast("Логи очищены")
+                        showToast(L10n.tr("toast.logsCleared"))
                     }
                 }
 
-                Section {
-                    NavigationLink {
-                        SetupGuideView()
-                    } label: {
-                        Label("Инструкция по настройке", systemImage: "questionmark.circle")
-                    }
-                }
-
-                Section("Фоновая работа") {
-                    Text(
-                        "Пока сервер запущен, приложение использует фоновую геолокацию. "
-                        + "Это позволяет продолжать передачу данных после блокировки устройства. "
-                        + "Активный сервер может заметно расходовать батарею; для длительных поездок "
-                        + "рекомендуется держать iPhone подключённым к питанию."
-                    )
+                Section(L10n.tr("section.background")) {
+                    Text(L10n.tr("background.description"))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+                }
+
+                Section(L10n.tr("section.about")) {
+                    LabeledContent(L10n.tr("about.version"), value: appVersionText)
                 }
             }
             .navigationTitle("GNSS Server")
@@ -123,41 +125,32 @@ struct ContentView: View {
                 switch alert {
                 case .denied:
                     return Alert(
-                        title: Text("Геолокация отключена"),
-                        message: Text(
-                            "GNSS Server не сможет работать без доступа к геолокации. "
-                            + "Откройте настройки iOS и разрешите доступ к геопозиции для этого приложения."
-                        ),
-                        primaryButton: .default(Text("Настройки")) {
+                        title: Text(L10n.tr("alert.locationDenied.title")),
+                        message: Text(L10n.tr("alert.locationDenied.message")),
+                        primaryButton: .default(Text(L10n.tr("common.settings"))) {
                             openAppSettings()
                         },
-                        secondaryButton: .cancel(Text("Отмена"))
+                        secondaryButton: .cancel(Text(L10n.tr("common.cancel")))
                     )
                 case .whenInUse:
                     return Alert(
-                        title: Text("Нужен доступ «Всегда»"),
-                        message: Text(
-                            "С доступом «При использовании» сервер может остановиться после блокировки экрана. "
-                            + "Для стабильной передачи координат в фоне выберите доступ к геопозиции «Всегда»."
-                        ),
-                        primaryButton: .default(Text("Настройки")) {
+                        title: Text(L10n.tr("alert.whenInUse.title")),
+                        message: Text(L10n.tr("alert.whenInUse.message")),
+                        primaryButton: .default(Text(L10n.tr("common.settings"))) {
                             openAppSettings()
                         },
-                        secondaryButton: .default(Text("Запросить снова")) {
+                        secondaryButton: .default(Text(L10n.tr("common.requestAgain"))) {
                             coordinator.requestPermissions()
                         }
                     )
                 case .restricted:
                     return Alert(
-                        title: Text("Геолокация ограничена"),
-                        message: Text(
-                            "iOS ограничивает доступ к геолокации для этого приложения. "
-                            + "Проверьте настройки устройства, иначе GNSS Server не сможет передавать координаты."
-                        ),
-                        primaryButton: .default(Text("Настройки")) {
+                        title: Text(L10n.tr("alert.locationRestricted.title")),
+                        message: Text(L10n.tr("alert.locationRestricted.message")),
+                        primaryButton: .default(Text(L10n.tr("common.settings"))) {
                             openAppSettings()
                         },
-                        secondaryButton: .cancel(Text("Отмена"))
+                        secondaryButton: .cancel(Text(L10n.tr("common.cancel")))
                     )
                 }
             }
@@ -205,7 +198,7 @@ struct ContentView: View {
             diagnostics: diagnostics,
             context: exportContext
         )
-        showToast("Краткая диагностика скопирована")
+        showToast(L10n.tr("toast.briefDiagnosticsCopied"))
         AppLogger.shared.info(.export, "Brief diagnostics copied")
     }
 
@@ -213,9 +206,9 @@ struct ContentView: View {
         do {
             let url = try LogExportService.exportLogFile(context: exportContext)
             shareItem = ShareItem(url: url)
-            showToast("Лог-файл подготовлен")
+            showToast(L10n.tr("toast.logFilePrepared"))
         } catch {
-            showToast("Не удалось подготовить лог-файл")
+            showToast(L10n.tr("toast.logFileFailed"))
             AppLogger.shared.error(.export, "Log export failed: \(error.localizedDescription)")
         }
     }
@@ -259,6 +252,17 @@ struct ContentView: View {
         return modes.contains("location")
     }
 
+    private var appVersionText: String {
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
+        let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+
+        if let build, !build.isEmpty {
+            return String(format: L10n.tr("about.versionWithBuild"), version, build)
+        }
+
+        return version
+    }
+
     private var diagnostics: [DiagnosticItem] {
         var items: [DiagnosticItem] = []
 
@@ -266,17 +270,17 @@ struct ContentView: View {
             if coordinator.connectedClientCount == 0 {
                 items.append(
                     DiagnosticItem(
-                        title: "Нет клиентов",
-                        detail: "К серверу пока не подключилось ни одно устройство.",
-                        action: "Проверьте, что клиент подключён к той же Wi-Fi сети или точке доступа iPhone, и укажите IP-адрес из блока «Сервер» и порт 8887."
+                        title: L10n.tr("diagnostic.noClients.title"),
+                        detail: L10n.tr("diagnostic.noClients.detail"),
+                        action: L10n.tr("diagnostic.noClients.action")
                     )
                 )
 
                 items.append(
                     DiagnosticItem(
-                        title: "Локальная сеть может быть не разрешена",
-                        detail: "iOS не даёт приложению напрямую показать статус этого разрешения.",
-                        action: "Если клиент не видит сервер, откройте настройки iOS для GNSS Server и включите доступ к локальной сети."
+                        title: L10n.tr("diagnostic.localNetwork.title"),
+                        detail: L10n.tr("diagnostic.localNetwork.detail"),
+                        action: L10n.tr("diagnostic.localNetwork.action")
                     )
                 )
             }
@@ -284,9 +288,9 @@ struct ContentView: View {
             if coordinator.lastLocation == nil {
                 items.append(
                     DiagnosticItem(
-                        title: "Нет координат",
-                        detail: "Сервер запущен, но iPhone ещё не получил актуальную геопозицию.",
-                        action: "Выйдите на открытое место, включите точную геопозицию и подождите несколько секунд."
+                        title: L10n.tr("diagnostic.noLocation.title"),
+                        detail: L10n.tr("diagnostic.noLocation.detail"),
+                        action: L10n.tr("diagnostic.noLocation.action")
                     )
                 )
             }
@@ -294,9 +298,9 @@ struct ContentView: View {
             if coordinator.localIPAddresses.isEmpty {
                 items.append(
                     DiagnosticItem(
-                        title: "Нет IP-адреса",
-                        detail: "Приложение не нашло локальный IPv4-адрес для подключения клиента.",
-                        action: "Подключите iPhone к Wi-Fi или включите точку доступа, затем проверьте адрес ещё раз."
+                        title: L10n.tr("diagnostic.noIp.title"),
+                        detail: L10n.tr("diagnostic.noIp.detail"),
+                        action: L10n.tr("diagnostic.noIp.action")
                     )
                 )
             }
@@ -304,26 +308,26 @@ struct ContentView: View {
             if coordinator.batteryState == .unplugged {
                 items.append(
                     DiagnosticItem(
-                        title: "iPhone не подключён к питанию",
-                        detail: "Активный GNSS server и фоновая геолокация могут заметно расходовать батарею.",
-                        action: "Для длительных поездок подключите iPhone к зарядке."
+                        title: L10n.tr("diagnostic.power.title"),
+                        detail: L10n.tr("diagnostic.power.detail"),
+                        action: L10n.tr("diagnostic.power.action")
                     )
                 )
             }
 
             items.append(
                 DiagnosticItem(
-                    title: "Сервер работает в фоне",
-                    detail: "iOS может ограничивать работу приложений в фоне, особенно после принудительного закрытия.",
-                    action: "Не закрывайте приложение из переключателя приложений, оставьте доступ к геопозиции «Всегда» и следите за Live Activity."
+                    title: L10n.tr("diagnostic.background.title"),
+                    detail: L10n.tr("diagnostic.background.detail"),
+                    action: L10n.tr("diagnostic.background.action")
                 )
             )
         } else {
             items.append(
                 DiagnosticItem(
-                    title: "Сервер остановлен",
-                    detail: "Клиенты не смогут подключиться, пока сервер не запущен.",
-                    action: "Нажмите «Запустить сервер» после выдачи разрешений."
+                    title: L10n.tr("diagnostic.serverStopped.title"),
+                    detail: L10n.tr("diagnostic.serverStopped.detail"),
+                    action: L10n.tr("diagnostic.serverStopped.action")
                 )
             )
         }
@@ -332,33 +336,33 @@ struct ContentView: View {
         case .notDetermined:
             items.append(
                 DiagnosticItem(
-                    title: "Геолокация ещё не разрешена",
-                    detail: "Без геолокации сервер не сможет передавать координаты.",
-                    action: "Нажмите «Запросить разрешения» и разрешите доступ к геопозиции."
+                    title: L10n.tr("diagnostic.locationNotDetermined.title"),
+                    detail: L10n.tr("diagnostic.locationNotDetermined.detail"),
+                    action: L10n.tr("diagnostic.locationNotDetermined.action")
                 )
             )
         case .restricted:
             items.append(
                 DiagnosticItem(
-                    title: "Геолокация ограничена",
-                    detail: "Система ограничивает доступ приложения к геопозиции.",
-                    action: "Проверьте настройки устройства и ограничения Screen Time."
+                    title: L10n.tr("diagnostic.locationRestricted.title"),
+                    detail: L10n.tr("diagnostic.locationRestricted.detail"),
+                    action: L10n.tr("diagnostic.locationRestricted.action")
                 )
             )
         case .denied:
             items.append(
                 DiagnosticItem(
-                    title: "Геолокация запрещена",
-                    detail: "GNSS Server не сможет работать без доступа к геопозиции.",
-                    action: "Откройте настройки iOS для приложения и разрешите геолокацию."
+                    title: L10n.tr("diagnostic.locationDenied.title"),
+                    detail: L10n.tr("diagnostic.locationDenied.detail"),
+                    action: L10n.tr("diagnostic.locationDenied.action")
                 )
             )
         case .authorizedWhenInUse:
             items.append(
                 DiagnosticItem(
-                    title: "Геолокация не «Всегда»",
-                    detail: "С доступом «При использовании» сервер может остановиться после блокировки экрана.",
-                    action: "В настройках iOS выберите доступ к геопозиции «Всегда»."
+                    title: L10n.tr("diagnostic.locationWhenInUse.title"),
+                    detail: L10n.tr("diagnostic.locationWhenInUse.detail"),
+                    action: L10n.tr("diagnostic.locationWhenInUse.action")
                 )
             )
         case .authorizedAlways:
@@ -366,9 +370,9 @@ struct ContentView: View {
         @unknown default:
             items.append(
                 DiagnosticItem(
-                    title: "Неизвестный статус геолокации",
-                    detail: "iOS вернула статус разрешения, который приложение не распознало.",
-                    action: "Проверьте настройки геолокации и перезапустите приложение."
+                    title: L10n.tr("diagnostic.locationUnknown.title"),
+                    detail: L10n.tr("diagnostic.locationUnknown.detail"),
+                    action: L10n.tr("diagnostic.locationUnknown.action")
                 )
             )
         }
@@ -376,9 +380,9 @@ struct ContentView: View {
         if coordinator.locationAccuracyAuthorization != .fullAccuracy {
             items.append(
                 DiagnosticItem(
-                    title: "Нет точной геопозиции",
-                    detail: "Координаты могут быть недостаточно точными для GNSS-клиента.",
-                    action: "В настройках геолокации для приложения включите «Точная геопозиция»."
+                    title: L10n.tr("diagnostic.reducedAccuracy.title"),
+                    detail: L10n.tr("diagnostic.reducedAccuracy.detail"),
+                    action: L10n.tr("diagnostic.reducedAccuracy.action")
                 )
             )
         }
@@ -481,53 +485,34 @@ private enum LocationPermissionAlert: Identifiable {
 private struct SetupGuideView: View {
     var body: some View {
         Form {
-            Section("1. Разрешения") {
-                Text(
-                    "Нажмите «Запросить разрешения» в основном экране и разрешите геолокацию."
-                )
+            Section(L10n.tr("setup.permissions.title")) {
+                Text(L10n.tr("setup.permissions.request"))
 
-                Text(
-                    "Для стабильной работы при заблокированном экране выберите доступ к геопозиции «Всегда» "
-                    + "и включите точную геопозицию."
-                )
+                Text(L10n.tr("setup.permissions.always"))
             }
 
-            Section("2. Локальная сеть") {
-                Text(
-                    "Разрешите доступ к локальной сети, когда iOS покажет запрос."
-                )
+            Section(L10n.tr("setup.localNetwork.title")) {
+                Text(L10n.tr("setup.localNetwork.allow"))
 
-                Text(
-                    "Он нужен, чтобы клиентское устройство могло подключиться к GNSS-серверу на этом iPhone."
-                )
+                Text(L10n.tr("setup.localNetwork.why"))
             }
 
-            Section("3. Wi-Fi или точка доступа") {
-                Text(
-                    "Подключите iPhone и клиентское устройство к одной сети Wi-Fi."
-                )
+            Section(L10n.tr("setup.network.title")) {
+                Text(L10n.tr("setup.network.sameWifi"))
 
-                Text(
-                    "Если общей сети нет, включите точку доступа на iPhone и подключите к ней клиентское устройство."
-                )
+                Text(L10n.tr("setup.network.hotspot"))
             }
 
-            Section("4. Запуск сервера") {
-                Text(
-                    "Нажмите «Запустить сервер». В разделе «Сервер» появится IP-адрес."
-                )
+            Section(L10n.tr("setup.server.title")) {
+                Text(L10n.tr("setup.server.start"))
 
-                Text(
-                    "В GPS/GNSS-клиенте укажите этот IP-адрес и TCP-порт 8887."
-                )
+                Text(L10n.tr("setup.server.clientAddress"))
             }
 
-            Section("5. Подключение клиента") {
-                Text(
-                    "Запустите клиентскую службу и убедитесь, что количество клиентов в этом приложении стало больше нуля."
-                )
+            Section(L10n.tr("setup.client.title")) {
+                Text(L10n.tr("setup.client.connect"))
             }
         }
-        .navigationTitle("Инструкция")
+        .navigationTitle(L10n.tr("setup.title"))
     }
 }

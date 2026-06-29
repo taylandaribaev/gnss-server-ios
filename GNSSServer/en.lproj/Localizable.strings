@@ -1,0 +1,137 @@
+"common.cancel" = "Cancel";
+"common.no" = "no";
+"common.requestAgain" = "Request again";
+"common.settings" = "Settings";
+"common.yes" = "yes";
+
+"section.server" = "Server";
+"section.location" = "Location";
+"section.diagnostics" = "Diagnostics";
+"section.background" = "Background operation";
+"section.about" = "About";
+
+"server.state" = "State";
+"server.tcpPort" = "TCP port";
+"server.clients" = "Clients";
+"server.ipAddress" = "IP address";
+"server.otherIp" = "Other IP";
+"server.ipNotFound" = "Not found";
+"server.start" = "Start server";
+"server.stop" = "Stop server";
+
+"location.permission" = "Permission";
+"location.precision" = "Precision";
+"location.coordinates" = "Coordinates";
+"location.accuracy" = "Accuracy";
+"location.accuracyValue" = "%.1f m";
+"location.noCoordinates" = "Coordinates have not been received yet";
+"location.requestPermissions" = "Request permissions";
+
+"diagnostics.includePreciseCoordinates" = "Include precise coordinates in log export";
+"diagnostics.copyBrief" = "Copy brief diagnostics";
+"diagnostics.shareLog" = "Share log file";
+"diagnostics.clearLogs" = "Clear logs";
+
+"setup.linkTitle" = "Setup guide";
+"setup.title" = "Guide";
+"setup.permissions.title" = "1. Permissions";
+"setup.permissions.request" = "Tap “Request permissions” on the main screen and allow location access.";
+"setup.permissions.always" = "For stable operation while the screen is locked, choose “Always” location access and enable precise location.";
+"setup.localNetwork.title" = "2. Local network";
+"setup.localNetwork.allow" = "Allow local network access when iOS shows the prompt.";
+"setup.localNetwork.why" = "It is needed so the client device can connect to the GNSS server on this iPhone.";
+"setup.network.title" = "3. Wi-Fi or hotspot";
+"setup.network.sameWifi" = "Connect the iPhone and the client device to the same Wi-Fi network.";
+"setup.network.hotspot" = "If there is no shared network, enable Personal Hotspot on the iPhone and connect the client device to it.";
+"setup.server.title" = "4. Start the server";
+"setup.server.start" = "Tap “Start server”. The IP address will appear in the “Server” section.";
+"setup.server.clientAddress" = "In the GPS/GNSS client, enter this IP address and TCP port 8887.";
+"setup.client.title" = "5. Connect the client";
+"setup.client.connect" = "Start the client service and make sure the client count in this app becomes greater than zero.";
+
+"background.description" = "While the server is running, the app uses background location. This allows it to keep sending data after the device is locked. An active server may noticeably drain the battery; for long trips, keep the iPhone connected to power.";
+
+"about.version" = "Version";
+"about.versionWithBuild" = "%@ (%@)";
+
+"alert.locationDenied.title" = "Location is disabled";
+"alert.locationDenied.message" = "GNSS Server cannot work without location access. Open iOS Settings and allow location access for this app.";
+"alert.whenInUse.title" = "Always access is needed";
+"alert.whenInUse.message" = "With “While Using” access, the server may stop after the screen is locked. For stable background coordinate sharing, choose “Always” location access.";
+"alert.locationRestricted.title" = "Location is restricted";
+"alert.locationRestricted.message" = "iOS is restricting location access for this app. Check device settings, otherwise GNSS Server will not be able to send coordinates.";
+
+"toast.briefDiagnosticsCopied" = "Brief diagnostics copied";
+"toast.logFilePrepared" = "Log file prepared";
+"toast.logFileFailed" = "Could not prepare log file";
+"toast.logsCleared" = "Logs cleared";
+
+"status.stopped" = "Stopped";
+"status.serverError" = "Server error";
+"status.awaitingCoordinates" = "Waiting for coordinates";
+"status.startFailed" = "Start failed";
+"status.transmittingCoordinates" = "Sending coordinates";
+
+"authorization.notDetermined" = "Not requested";
+"authorization.restricted" = "Restricted";
+"authorization.denied" = "Denied";
+"authorization.always" = "Always";
+"authorization.whenInUse" = "While Using";
+"authorization.unknown" = "Unknown";
+
+"precision.unknown" = "Unknown";
+"precision.full" = "Precise";
+"precision.reduced" = "Approximate";
+
+"liveActivity.awaitingLocation" = "Waiting for location";
+"liveActivity.transmittingLocation" = "Sharing location";
+"liveActivity.serverStopped" = "Server stopped";
+
+"diagnostic.noClients.title" = "No clients";
+"diagnostic.noClients.detail" = "No device has connected to the server yet.";
+"diagnostic.noClients.action" = "Make sure the client is on the same Wi-Fi network or iPhone hotspot, then enter the IP address from the “Server” section and port 8887.";
+"diagnostic.localNetwork.title" = "Local network may not be allowed";
+"diagnostic.localNetwork.detail" = "iOS does not let the app show this permission status directly.";
+"diagnostic.localNetwork.action" = "If the client cannot see the server, open iOS Settings for GNSS Server and enable Local Network access.";
+"diagnostic.noLocation.title" = "No coordinates";
+"diagnostic.noLocation.detail" = "The server is running, but the iPhone has not received a current location yet.";
+"diagnostic.noLocation.action" = "Move to an open area, enable precise location, and wait a few seconds.";
+"diagnostic.noIp.title" = "No IP address";
+"diagnostic.noIp.detail" = "The app did not find a local IPv4 address for the client connection.";
+"diagnostic.noIp.action" = "Connect the iPhone to Wi-Fi or enable Personal Hotspot, then check the address again.";
+"diagnostic.power.title" = "iPhone is not connected to power";
+"diagnostic.power.detail" = "An active GNSS server and background location may noticeably drain the battery.";
+"diagnostic.power.action" = "For long trips, connect the iPhone to a charger.";
+"diagnostic.background.title" = "Server is running in the background";
+"diagnostic.background.detail" = "iOS may limit background app activity, especially after the app is force-closed.";
+"diagnostic.background.action" = "Do not force-close the app, keep location access set to “Always”, and watch the Live Activity.";
+"diagnostic.serverStopped.title" = "Server stopped";
+"diagnostic.serverStopped.detail" = "Clients cannot connect until the server is running.";
+"diagnostic.serverStopped.action" = "Tap “Start server” after granting permissions.";
+"diagnostic.locationNotDetermined.title" = "Location is not allowed yet";
+"diagnostic.locationNotDetermined.detail" = "Without location access, the server cannot send coordinates.";
+"diagnostic.locationNotDetermined.action" = "Tap “Request permissions” and allow location access.";
+"diagnostic.locationRestricted.title" = "Location is restricted";
+"diagnostic.locationRestricted.detail" = "The system is restricting this app's location access.";
+"diagnostic.locationRestricted.action" = "Check device settings and Screen Time restrictions.";
+"diagnostic.locationDenied.title" = "Location is denied";
+"diagnostic.locationDenied.detail" = "GNSS Server cannot work without location access.";
+"diagnostic.locationDenied.action" = "Open iOS Settings for the app and allow location access.";
+"diagnostic.locationWhenInUse.title" = "Location is not “Always”";
+"diagnostic.locationWhenInUse.detail" = "With “While Using” access, the server may stop after the screen is locked.";
+"diagnostic.locationWhenInUse.action" = "In iOS Settings, choose “Always” location access.";
+"diagnostic.locationUnknown.title" = "Unknown location status";
+"diagnostic.locationUnknown.detail" = "iOS returned a location permission status the app does not recognize.";
+"diagnostic.locationUnknown.action" = "Check location settings and restart the app.";
+"diagnostic.reducedAccuracy.title" = "Precise location is off";
+"diagnostic.reducedAccuracy.detail" = "Coordinates may be insufficiently accurate for the GNSS client.";
+"diagnostic.reducedAccuracy.action" = "In location settings for this app, enable “Precise Location”.";
+
+"briefDiagnostics.title" = "GNSS Server diagnostics";
+"briefDiagnostics.serverRunning" = "Server running: %@";
+"briefDiagnostics.clients" = "Clients: %d";
+"briefDiagnostics.ip" = "IP: %@";
+"briefDiagnostics.port" = "Port: %d";
+"briefDiagnostics.locationPermission" = "Location permission: %@";
+"briefDiagnostics.accuracy" = "Accuracy: %@";
+"briefDiagnostics.items" = "Items:";

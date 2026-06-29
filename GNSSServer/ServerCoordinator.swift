@@ -6,13 +6,13 @@ import UIKit
 final class ServerCoordinator: ObservableObject {
     @Published private(set) var isRunning = false
     @Published private(set) var connectedClientCount = 0
-    @Published private(set) var statusText = "Остановлен"
+    @Published private(set) var statusText = L10n.tr("status.stopped")
     @Published private(set) var errorText: String?
     @Published private(set) var lastLocation: LocationPayload?
     @Published private(set) var locationAuthorizationStatus: CLAuthorizationStatus = .notDetermined
     @Published private(set) var locationAccuracyAuthorization: CLAccuracyAuthorization = .reducedAccuracy
-    @Published private(set) var locationAuthorizationText = "Не запрошено"
-    @Published private(set) var precisionText = "Неизвестно"
+    @Published private(set) var locationAuthorizationText = L10n.tr("authorization.notDetermined")
+    @Published private(set) var precisionText = L10n.tr("precision.unknown")
     @Published private(set) var shouldShowLocationPermissionButton = true
     @Published private(set) var localIPAddresses: [String] = []
     @Published private(set) var batteryState: UIDevice.BatteryState = .unknown
@@ -64,8 +64,8 @@ final class ServerCoordinator: ObservableObject {
                 if self?.isRunning == true {
                     LiveActivityService.shared.update(
                         status: self?.lastLocation == nil
-                            ? "Ожидание геопозиции"
-                            : "Передача геопозиции",
+                            ? L10n.tr("liveActivity.awaitingLocation")
+                            : L10n.tr("liveActivity.transmittingLocation"),
                         clientCount: count,
                         locationDate: self?.lastLocation.map {
                             Date(timeIntervalSince1970: TimeInterval($0.timestamp) / 1_000)
@@ -78,7 +78,7 @@ final class ServerCoordinator: ObservableObject {
         tcpServer.onFailure = { [weak self] error in
             Task { @MainActor in
                 self?.errorText = error.localizedDescription
-                self?.statusText = "Ошибка сервера"
+                self?.statusText = L10n.tr("status.serverError")
                 self?.isRunning = false
                 self?.locationService.stop()
             }
@@ -115,7 +115,7 @@ final class ServerCoordinator: ObservableObject {
         do {
             try tcpServer.start()
             isRunning = true
-            statusText = "Ожидание координат"
+            statusText = L10n.tr("status.awaitingCoordinates")
             AppLogger.shared.info(.server, "Server started successfully")
 
             // Keep Core Location active for the whole server session. On iOS this
@@ -134,7 +134,7 @@ final class ServerCoordinator: ObservableObject {
             startAddressRefresh()
         } catch {
             errorText = error.localizedDescription
-            statusText = "Ошибка запуска"
+            statusText = L10n.tr("status.startFailed")
             AppLogger.shared.error(.server, "Server start failed: \(error.localizedDescription)")
         }
     }
@@ -159,7 +159,7 @@ final class ServerCoordinator: ObservableObject {
 
         isRunning = false
         connectedClientCount = 0
-        statusText = "Остановлен"
+        statusText = L10n.tr("status.stopped")
         refreshLocalIPAddresses()
         AppLogger.shared.info(.server, "Server stopped")
     }
@@ -167,7 +167,7 @@ final class ServerCoordinator: ObservableObject {
     private func handleLocation(_ location: LocationPayload) {
         guard isRunning else { return }
         lastLocation = location
-        statusText = "Передача координат"
+        statusText = L10n.tr("status.transmittingCoordinates")
         AppLogger.shared.debug(.server, "Sending location to clients with accuracy \(location.accuracy)m")
 
         tcpServer.updateLatest(
@@ -179,7 +179,7 @@ final class ServerCoordinator: ObservableObject {
             broadcast: true
         )
         LiveActivityService.shared.update(
-            status: "Передача геопозиции",
+            status: L10n.tr("liveActivity.transmittingLocation"),
             clientCount: connectedClientCount,
             locationDate: Date(timeIntervalSince1970: TimeInterval(location.timestamp) / 1_000)
         )
@@ -192,16 +192,16 @@ final class ServerCoordinator: ObservableObject {
         locationAuthorizationStatus = status
         locationAccuracyAuthorization = accuracy
         locationAuthorizationText = switch status {
-        case .notDetermined: "Не запрошено"
-        case .restricted: "Ограничено"
-        case .denied: "Запрещено"
-        case .authorizedAlways: "Всегда"
-        case .authorizedWhenInUse: "При использовании"
-        @unknown default: "Неизвестно"
+        case .notDetermined: L10n.tr("authorization.notDetermined")
+        case .restricted: L10n.tr("authorization.restricted")
+        case .denied: L10n.tr("authorization.denied")
+        case .authorizedAlways: L10n.tr("authorization.always")
+        case .authorizedWhenInUse: L10n.tr("authorization.whenInUse")
+        @unknown default: L10n.tr("authorization.unknown")
         }
 
         shouldShowLocationPermissionButton = status != .authorizedAlways
-        precisionText = accuracy == .fullAccuracy ? "Точная" : "Приблизительная"
+        precisionText = accuracy == .fullAccuracy ? L10n.tr("precision.full") : L10n.tr("precision.reduced")
     }
 
     private func refreshLocalIPAddresses() {

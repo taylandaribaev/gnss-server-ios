@@ -1,0 +1,3 @@
+"NSLocalNetworkUsageDescription" = "Local network access is needed so other devices can connect to the GNSS server on this iPhone.";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Background location is needed to keep sending coordinates to connected clients when the screen is locked.";
+"NSLocationWhenInUseUsageDescription" = "Location access is needed to send current coordinates to connected GNSS clients.";

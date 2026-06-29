@@ -51,7 +51,7 @@ struct GNSSServerLiveActivity: Widget {
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     HStack {
-                        Text("Передача геопозиции")
+                        Text(L10n.tr("liveActivity.transmittingLocation"))
                         Spacer()
                         Text("TCP \(context.attributes.port)")
                     }
