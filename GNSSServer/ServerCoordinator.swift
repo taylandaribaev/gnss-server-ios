@@ -8,8 +8,10 @@ final class ServerCoordinator: ObservableObject {
     @Published private(set) var statusText = "Остановлен"
     @Published private(set) var errorText: String?
     @Published private(set) var lastLocation: LocationPayload?
+    @Published private(set) var locationAuthorizationStatus: CLAuthorizationStatus = .notDetermined
     @Published private(set) var locationAuthorizationText = "Не запрошено"
     @Published private(set) var precisionText = "Неизвестно"
+    @Published private(set) var shouldShowLocationPermissionButton = true
     @Published private(set) var localIPAddresses: [String] = []
 
     private let locationService = LocationService()
@@ -142,6 +144,7 @@ final class ServerCoordinator: ObservableObject {
         status: CLAuthorizationStatus,
         accuracy: CLAccuracyAuthorization
     ) {
+        locationAuthorizationStatus = status
         locationAuthorizationText = switch status {
         case .notDetermined: "Не запрошено"
         case .restricted: "Ограничено"
@@ -151,6 +154,7 @@ final class ServerCoordinator: ObservableObject {
         @unknown default: "Неизвестно"
         }
 
+        shouldShowLocationPermissionButton = status != .authorizedAlways
         precisionText = accuracy == .fullAccuracy ? "Точная" : "Приблизительная"
     }
 

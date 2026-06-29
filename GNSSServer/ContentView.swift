@@ -1,8 +1,11 @@
 import CoreLocation
 import SwiftUI
+import UIKit
 
 struct ContentView: View {
     @EnvironmentObject private var coordinator: ServerCoordinator
+    @Environment(\.openURL) private var openURL
+    @State private var locationPermissionAlert: LocationPermissionAlert?
 
     var body: some View {
         NavigationStack {
@@ -29,7 +32,7 @@ struct ContentView: View {
                     }
 
                     Button(coordinator.isRunning ? "Остановить сервер" : "Запустить сервер") {
-                        coordinator.isRunning ? coordinator.stop() : coordinator.start()
+                        handleServerButton()
                     }
                     .foregroundStyle(coordinator.isRunning ? .red : .blue)
                 }
@@ -52,8 +55,10 @@ struct ContentView: View {
                             .foregroundStyle(.secondary)
                     }
 
-                    Button("Запросить разрешения") {
-                        coordinator.requestPermissions()
+                    if coordinator.shouldShowLocationPermissionButton {
+                        Button("Запросить разрешения") {
+                            handlePermissionButton()
+                        }
                     }
                 }
 
@@ -77,6 +82,101 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("GNSS Server")
+            .alert(item: $locationPermissionAlert) { alert in
+                switch alert {
+                case .denied:
+                    return Alert(
+                        title: Text("Геолокация отключена"),
+                        message: Text(
+                            "GNSS Server не сможет работать без доступа к геолокации. "
+                            + "Откройте настройки iOS и разрешите доступ к геопозиции для этого приложения."
+                        ),
+                        primaryButton: .default(Text("Настройки")) {
+                            openAppSettings()
+                        },
+                        secondaryButton: .cancel(Text("Отмена"))
+                    )
+                case .whenInUse:
+                    return Alert(
+                        title: Text("Нужен доступ «Всегда»"),
+                        message: Text(
+                            "С доступом «При использовании» сервер может остановиться после блокировки экрана. "
+                            + "Для стабильной передачи координат в фоне выберите доступ к геопозиции «Всегда»."
+                        ),
+                        primaryButton: .default(Text("Настройки")) {
+                            openAppSettings()
+                        },
+                        secondaryButton: .default(Text("Запросить снова")) {
+                            coordinator.requestPermissions()
+                        }
+                    )
+                case .restricted:
+                    return Alert(
+                        title: Text("Геолокация ограничена"),
+                        message: Text(
+                            "iOS ограничивает доступ к геолокации для этого приложения. "
+                            + "Проверьте настройки устройства, иначе GNSS Server не сможет передавать координаты."
+                        ),
+                        primaryButton: .default(Text("Настройки")) {
+                            openAppSettings()
+                        },
+                        secondaryButton: .cancel(Text("Отмена"))
+                    )
+                }
+            }
+        }
+    }
+
+    private func handleServerButton() {
+        if coordinator.isRunning {
+            coordinator.stop()
+            return
+        }
+
+        switch coordinator.locationAuthorizationStatus {
+        case .denied:
+            locationPermissionAlert = .denied
+        case .restricted:
+            locationPermissionAlert = .restricted
+        case .authorizedWhenInUse:
+            locationPermissionAlert = .whenInUse
+        default:
+            coordinator.start()
+        }
+    }
+
+    private func handlePermissionButton() {
+        switch coordinator.locationAuthorizationStatus {
+        case .denied:
+            locationPermissionAlert = .denied
+        case .restricted:
+            locationPermissionAlert = .restricted
+        case .authorizedWhenInUse:
+            locationPermissionAlert = .whenInUse
+        default:
+            coordinator.requestPermissions()
+        }
+    }
+
+    private func openAppSettings() {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        openURL(url)
+    }
+}
+
+private enum LocationPermissionAlert: Identifiable {
+    case denied
+    case whenInUse
+    case restricted
+
+    var id: String {
+        switch self {
+        case .denied:
+            return "denied"
+        case .whenInUse:
+            return "whenInUse"
+        case .restricted:
+            return "restricted"
         }
     }
 }
