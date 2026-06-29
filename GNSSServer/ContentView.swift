@@ -12,15 +12,15 @@ struct ContentView: View {
             Form {
                 Section("Сервер") {
                     LabeledContent("Состояние", value: coordinator.statusText)
-                    LabeledContent("TCP-порт", value: "8887")
+                    SelectableValueRow(label: "TCP-порт", value: "8887")
                     LabeledContent("Клиентов", value: "\(coordinator.connectedClientCount)")
 
                     if coordinator.localIPAddresses.isEmpty {
                         LabeledContent("IP-адрес", value: "Не найден")
                     } else {
                         ForEach(Array(coordinator.localIPAddresses.enumerated()), id: \.element) { index, address in
-                            LabeledContent(
-                                index == 0 ? "IP-адрес" : "Другой IP",
+                            SelectableValueRow(
+                                label: index == 0 ? "IP-адрес" : "Другой IP",
                                 value: address
                             )
                         }
@@ -42,8 +42,8 @@ struct ContentView: View {
                     LabeledContent("Точность", value: coordinator.precisionText)
 
                     if let location = coordinator.lastLocation {
-                        LabeledContent(
-                            "Координаты",
+                        SelectableValueRow(
+                            label: "Координаты",
                             value: String(format: "%.6f, %.6f", location.latitude, location.longitude)
                         )
                         LabeledContent(
@@ -161,6 +161,21 @@ struct ContentView: View {
     private func openAppSettings() {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         openURL(url)
+    }
+}
+
+private struct SelectableValueRow: View {
+    let label: String
+    let value: String
+
+    var body: some View {
+        HStack {
+            Text(label)
+            Spacer()
+            Text(value)
+                .foregroundStyle(.secondary)
+                .textSelection(.enabled)
+        }
     }
 }
 
