@@ -6,6 +6,10 @@ struct ContentView: View {
     @EnvironmentObject private var coordinator: ServerCoordinator
     @Environment(\.openURL) private var openURL
     @State private var locationPermissionAlert: LocationPermissionAlert?
+    @State private var includePreciseCoordinatesInLogExport = false
+    @State private var toastMessage: String?
+    @State private var toastDismissTask: Task<Void, Never>?
+    @State private var shareItem: ShareItem?
 
     var body: some View {
         NavigationStack {
@@ -66,6 +70,24 @@ struct ContentView: View {
                     ForEach(diagnostics) { item in
                         DiagnosticRow(item: item)
                     }
+
+                    Toggle(
+                        "Включать точные координаты в экспорт логов",
+                        isOn: $includePreciseCoordinatesInLogExport
+                    )
+
+                    Button("Скопировать краткую диагностику") {
+                        copyBriefDiagnostics()
+                    }
+
+                    Button("Поделиться лог-файлом") {
+                        shareLogFile()
+                    }
+
+                    Button("Очистить логи", role: .destructive) {
+                        AppLogger.shared.clear()
+                        showToast("Логи очищены")
+                    }
                 }
 
                 Section {
@@ -88,6 +110,17 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("GNSS Server")
+            .overlay(alignment: .bottom) {
+                if let toastMessage {
+                    ToastView(message: toastMessage)
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 24)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
+            }
+            .sheet(item: $shareItem) { item in
+                ShareSheet(activityItems: [item.url])
+            }
             .alert(item: $locationPermissionAlert) { alert in
                 switch alert {
                 case .denied:
@@ -167,6 +200,65 @@ struct ContentView: View {
     private func openAppSettings() {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         openURL(url)
+    }
+
+    private func copyBriefDiagnostics() {
+        UIPasteboard.general.string = LogExportService.makeBriefDiagnostics(
+            diagnostics: diagnostics,
+            context: exportContext
+        )
+        showToast("Краткая диагностика скопирована")
+        AppLogger.shared.info(.export, "Brief diagnostics copied")
+    }
+
+    private func shareLogFile() {
+        do {
+            let url = try LogExportService.exportLogFile(context: exportContext)
+            shareItem = ShareItem(url: url)
+            showToast("Лог-файл подготовлен")
+        } catch {
+            showToast("Не удалось подготовить лог-файл")
+            AppLogger.shared.error(.export, "Log export failed: \(error.localizedDescription)")
+        }
+    }
+
+    private func showToast(_ message: String) {
+        toastDismissTask?.cancel()
+
+        withAnimation(.easeInOut(duration: 0.2)) {
+            toastMessage = message
+        }
+
+        toastDismissTask = Task {
+            try? await Task.sleep(for: .seconds(2))
+            await MainActor.run {
+                guard toastMessage == message else { return }
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    toastMessage = nil
+                }
+            }
+        }
+    }
+
+    private var exportContext: LogExportContext {
+        LogExportContext(
+            isRunning: coordinator.isRunning,
+            localIPAddresses: coordinator.localIPAddresses,
+            port: 8887,
+            connectedClientCount: coordinator.connectedClientCount,
+            locationAuthorizationText: coordinator.locationAuthorizationText,
+            backgroundLocationEnabled: backgroundLocationEnabled,
+            batteryLevel: coordinator.batteryLevel,
+            batteryState: coordinator.batteryState,
+            lastLocation: coordinator.lastLocation,
+            accuracyText: coordinator.precisionText,
+            includePreciseCoordinates: includePreciseCoordinatesInLogExport
+        )
+    }
+
+    private var backgroundLocationEnabled: Bool {
+        let modes = Bundle.main.object(forInfoDictionaryKey: "UIBackgroundModes") as? [String] ?? []
+        return modes.contains("location")
     }
 
     private var diagnostics: [DiagnosticItem] {
@@ -312,13 +404,43 @@ private struct SelectableValueRow: View {
     }
 }
 
-private struct DiagnosticItem: Identifiable {
+struct DiagnosticItem: Identifiable {
     let title: String
     let detail: String
     let action: String
 
     var id: String {
         title
+    }
+}
+
+private struct ShareItem: Identifiable {
+    let id = UUID()
+    let url: URL
+}
+
+private struct ShareSheet: UIViewControllerRepresentable {
+    let activityItems: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+}
+
+private struct ToastView: View {
+    let message: String
+
+    var body: some View {
+        Text(message)
+            .font(.footnote.weight(.medium))
+            .foregroundStyle(.white)
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(.black.opacity(0.82), in: Capsule())
+            .shadow(radius: 8)
     }
 }
 

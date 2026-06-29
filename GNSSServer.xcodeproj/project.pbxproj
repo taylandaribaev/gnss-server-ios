@@ -23,6 +23,8 @@
 		10000000000000000000000F /* GNSSServerLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000011 /* GNSSServerLiveActivity.swift */; };
 		100000000000000000000010 /* LocationSharingActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20000000000000000000000E /* LocationSharingActivityAttributes.swift */; };
 		100000000000000000000011 /* GNSSServerLiveActivity.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 200000000000000000000013 /* GNSSServerLiveActivity.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		100000000000000000000012 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000014 /* AppLogger.swift */; };
+		100000000000000000000013 /* LogExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000015 /* LogExportService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +70,8 @@
 		200000000000000000000011 /* GNSSServerLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GNSSServerLiveActivity.swift; sourceTree = "<group>"; };
 		200000000000000000000012 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		200000000000000000000013 /* GNSSServerLiveActivity.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GNSSServerLiveActivity.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		200000000000000000000014 /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
+		200000000000000000000015 /* LogExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogExportService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +106,8 @@
 			children = (
 				200000000000000000000001 /* GNSSServerApp.swift */,
 				200000000000000000000002 /* ContentView.swift */,
+				200000000000000000000014 /* AppLogger.swift */,
+				200000000000000000000015 /* LogExportService.swift */,
 				200000000000000000000009 /* ServerCoordinator.swift */,
 				200000000000000000000005 /* LocationService.swift */,
 				200000000000000000000007 /* TCPServer.swift */,
@@ -246,6 +252,8 @@
 				10000000000000000000000B /* NetworkAddressProvider.swift in Sources */,
 				10000000000000000000000C /* LocationSharingActivityAttributes.swift in Sources */,
 				10000000000000000000000D /* LiveActivityService.swift in Sources */,
+				100000000000000000000012 /* AppLogger.swift in Sources */,
+				100000000000000000000013 /* LogExportService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

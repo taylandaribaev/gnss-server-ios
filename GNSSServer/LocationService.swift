@@ -32,6 +32,7 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
     }
 
     func requestAuthorization() {
+        AppLogger.shared.info(.location, "Requesting location authorization from status \(manager.authorizationStatus.rawValue)")
         switch manager.authorizationStatus {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
@@ -51,6 +52,7 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
 
     func start() {
         shouldRun = true
+        AppLogger.shared.info(.location, "Starting location updates")
         requestAuthorization()
 
         if manager.authorizationStatus == .authorizedAlways
@@ -62,9 +64,14 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
     func stop() {
         shouldRun = false
         manager.stopUpdatingLocation()
+        AppLogger.shared.info(.location, "Stopped location updates")
     }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        AppLogger.shared.info(
+            .location,
+            "Location authorization changed: status=\(manager.authorizationStatus.rawValue), accuracy=\(manager.accuracyAuthorization == .fullAccuracy ? "full" : "reduced")"
+        )
         onAuthorizationChange?(manager.authorizationStatus, manager.accuracyAuthorization)
 
         if manager.authorizationStatus == .authorizedWhenInUse && !requestedAlwaysAuthorization {
@@ -82,6 +89,9 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
+        if manager.accuracyAuthorization != .fullAccuracy {
+            AppLogger.shared.warn(.location, "Location accuracy is reduced")
+        }
 
         let payload = LocationPayload(
             timestamp: Int64(location.timestamp.timeIntervalSince1970 * 1_000),
@@ -94,6 +104,7 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
             provider: "fused",
             locationAge: Float(max(0, -location.timestamp.timeIntervalSinceNow))
         )
+        AppLogger.shared.debug(.location, "Location update received with accuracy \(payload.accuracy)m")
         onLocation?(payload)
     }
 
@@ -101,6 +112,6 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
         if let coreLocationError = error as? CLError, coreLocationError.code == .locationUnknown {
             return
         }
+        AppLogger.shared.error(.location, "Location updates failed: \(error.localizedDescription)")
     }
 }
-

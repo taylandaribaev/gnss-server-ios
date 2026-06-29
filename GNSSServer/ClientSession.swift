@@ -9,6 +9,10 @@ final class ClientSession {
     let id = UUID()
 
     var onDisconnect: ((UUID) -> Void)?
+    var onHeartbeat: ((UUID) -> Void)?
+    var onHeartbeatTimeout: ((UUID) -> Void)?
+    var onSendSuccess: ((UUID) -> Void)?
+    var onSendError: ((UUID, Error) -> Void)?
     var latestResponse: (() -> (data: Data, hasLocation: Bool))?
 
     private let connection: NWConnection
@@ -28,10 +32,14 @@ final class ClientSession {
             guard let self else { return }
             switch state {
             case .ready:
+                AppLogger.shared.info(.client, "Client \(self.id) connection ready")
                 self.sendLatestResponse()
                 self.startHeartbeatTimer()
                 self.receiveHeartbeat()
-            case .failed, .cancelled:
+            case let .failed(error):
+                AppLogger.shared.warn(.client, "Client \(self.id) connection failed: \(error.localizedDescription)")
+                self.disconnect()
+            case .cancelled:
                 self.disconnect()
             default:
                 break
@@ -58,6 +66,7 @@ final class ClientSession {
 
             if let byte = data?.first, byte == Self.heartbeatPacket {
                 self.lastHeartbeat = Date()
+                self.onHeartbeat?(self.id)
                 let latest = self.latestResponse?()
                 if self.lastResponse.timeIntervalSinceNow < -Self.responseInterval
                     || latest?.hasLocation == false {
@@ -83,9 +92,11 @@ final class ClientSession {
         connection.send(content: data, completion: .contentProcessed { [weak self] error in
             guard let self else { return }
             if error != nil {
+                self.onSendError?(self.id, error!)
                 self.disconnect()
             } else {
                 self.lastResponse = Date()
+                self.onSendSuccess?(self.id)
             }
         })
     }
@@ -96,6 +107,7 @@ final class ClientSession {
         timer.setEventHandler { [weak self] in
             guard let self else { return }
             if Date().timeIntervalSince(self.lastHeartbeat) > Self.heartbeatTimeout {
+                self.onHeartbeatTimeout?(self.id)
                 self.disconnect()
             }
         }
@@ -109,7 +121,7 @@ final class ClientSession {
         heartbeatTimer?.cancel()
         heartbeatTimer = nil
         connection.cancel()
+        AppLogger.shared.info(.client, "Client \(id) disconnected")
         onDisconnect?(id)
     }
 }
-

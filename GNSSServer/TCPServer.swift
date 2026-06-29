@@ -21,6 +21,7 @@ final class TCPServer {
     )
 
     func start() throws {
+        AppLogger.shared.info(.server, "Starting TCP server on port \(port)")
         let parameters = NWParameters.tcp
         parameters.allowLocalEndpointReuse = true
 
@@ -28,6 +29,7 @@ final class TCPServer {
         listener.stateUpdateHandler = { [weak self] state in
             guard let self else { return }
             if case let .failed(error) = state {
+                AppLogger.shared.error(.server, "TCP listener failed: \(error.localizedDescription)")
                 self.onFailure?(error)
                 self.stop()
             }
@@ -37,6 +39,7 @@ final class TCPServer {
         }
         self.listener = listener
         listener.start(queue: queue)
+        AppLogger.shared.info(.server, "TCP listener started")
     }
 
     func updateLatest(_ response: ServerResponsePayload, broadcast: Bool) {
@@ -45,6 +48,7 @@ final class TCPServer {
             guard let self else { return }
             self.latestResponse = (framed, response.location != nil)
             if broadcast {
+                AppLogger.shared.debug(.server, "Broadcasting response to \(self.clients.count) clients")
                 for client in self.clients.values {
                     client.send(framed)
                 }
@@ -60,6 +64,7 @@ final class TCPServer {
             let sessions = Array(self.clients.values)
             self.clients.removeAll()
             sessions.forEach { $0.cancel() }
+            AppLogger.shared.info(.server, "TCP server stopped")
             self.onClientCountChange?(0)
         }
     }
@@ -76,9 +81,24 @@ final class TCPServer {
                 self.onClientCountChange?(self.clients.count)
             }
         }
+        session.onHeartbeat = { id in
+            AppLogger.shared.recordHeartbeatReceived()
+            AppLogger.shared.debug(.client, "Heartbeat received from client \(id)")
+        }
+        session.onHeartbeatTimeout = { id in
+            AppLogger.shared.warn(.client, "Heartbeat timeout for client \(id)")
+        }
+        session.onSendSuccess = { id in
+            AppLogger.shared.recordPacketSent()
+            AppLogger.shared.debug(.client, "Sent packet to client \(id)")
+        }
+        session.onSendError = { id, error in
+            AppLogger.shared.recordSendError()
+            AppLogger.shared.error(.client, "Send error for client \(id): \(error.localizedDescription)")
+        }
         clients[session.id] = session
+        AppLogger.shared.info(.client, "Client \(session.id) connected")
         onClientCountChange?(clients.count)
         session.start()
     }
 }
-

@@ -12,7 +12,11 @@ final class LiveActivityService {
     private init() {}
 
     func start(clientCount: Int) {
-        guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
+        guard ActivityAuthorizationInfo().areActivitiesEnabled else {
+            AppLogger.shared.warn(.liveActivity, "Live Activities are disabled")
+            return
+        }
+        AppLogger.shared.info(.liveActivity, "Starting Live Activity")
         shouldBeActive = true
 
         Task {
@@ -33,11 +37,13 @@ final class LiveActivityService {
                     pushType: nil
                 )
                 lastUpdateDate = Date()
+                AppLogger.shared.info(.liveActivity, "Live Activity started")
                 if !shouldBeActive {
                     await activity?.end(nil, dismissalPolicy: .immediate)
                     activity = nil
                 }
             } catch {
+                AppLogger.shared.error(.liveActivity, "Live Activity start failed: \(error.localizedDescription)")
                 activity = nil
             }
         }
@@ -59,10 +65,12 @@ final class LiveActivityService {
 
         Task {
             await activity.update(ActivityContent(state: state, staleDate: nil))
+            AppLogger.shared.debug(.liveActivity, "Live Activity updated: \(status), clients=\(clientCount)")
         }
     }
 
     func stop() {
+        AppLogger.shared.info(.liveActivity, "Stopping Live Activity")
         shouldBeActive = false
         let finalState = LocationSharingActivityAttributes.ContentState(
             status: "Сервер остановлен",
@@ -79,6 +87,7 @@ final class LiveActivityService {
             }
             await endExistingActivities()
             self.activity = nil
+            AppLogger.shared.info(.liveActivity, "Live Activity stopped")
         }
     }
 

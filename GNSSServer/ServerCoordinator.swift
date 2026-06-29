@@ -16,15 +16,18 @@ final class ServerCoordinator: ObservableObject {
     @Published private(set) var shouldShowLocationPermissionButton = true
     @Published private(set) var localIPAddresses: [String] = []
     @Published private(set) var batteryState: UIDevice.BatteryState = .unknown
+    @Published private(set) var batteryLevel: Float = UIDevice.current.batteryLevel
 
     private let locationService = LocationService()
     private let tcpServer = TCPServer()
     private var addressRefreshTask: Task<Void, Never>?
     private var batteryStateObserver: NSObjectProtocol?
+    private var batteryLevelObserver: NSObjectProtocol?
 
     init() {
         UIDevice.current.isBatteryMonitoringEnabled = true
         batteryState = UIDevice.current.batteryState
+        batteryLevel = UIDevice.current.batteryLevel
         batteryStateObserver = NotificationCenter.default.addObserver(
             forName: UIDevice.batteryStateDidChangeNotification,
             object: nil,
@@ -32,6 +35,16 @@ final class ServerCoordinator: ObservableObject {
         ) { [weak self] _ in
             Task { @MainActor in
                 self?.batteryState = UIDevice.current.batteryState
+                self?.batteryLevel = UIDevice.current.batteryLevel
+            }
+        }
+        batteryLevelObserver = NotificationCenter.default.addObserver(
+            forName: UIDevice.batteryLevelDidChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.batteryLevel = UIDevice.current.batteryLevel
             }
         }
 
@@ -82,6 +95,9 @@ final class ServerCoordinator: ObservableObject {
         if let batteryStateObserver {
             NotificationCenter.default.removeObserver(batteryStateObserver)
         }
+        if let batteryLevelObserver {
+            NotificationCenter.default.removeObserver(batteryLevelObserver)
+        }
         UIDevice.current.isBatteryMonitoringEnabled = false
     }
 
@@ -92,6 +108,7 @@ final class ServerCoordinator: ObservableObject {
     func start() {
         guard !isRunning else { return }
 
+        AppLogger.shared.info(.server, "Server start requested")
         errorText = nil
         requestPermissions()
 
@@ -99,6 +116,7 @@ final class ServerCoordinator: ObservableObject {
             try tcpServer.start()
             isRunning = true
             statusText = "Ожидание координат"
+            AppLogger.shared.info(.server, "Server started successfully")
 
             // Keep Core Location active for the whole server session. On iOS this
             // is required to continue execution and accept TCP traffic while locked.
@@ -117,12 +135,14 @@ final class ServerCoordinator: ObservableObject {
         } catch {
             errorText = error.localizedDescription
             statusText = "Ошибка запуска"
+            AppLogger.shared.error(.server, "Server start failed: \(error.localizedDescription)")
         }
     }
 
     func stop() {
         guard isRunning else { return }
 
+        AppLogger.shared.info(.server, "Server stop requested")
         tcpServer.updateLatest(
             ServerResponsePayload(
                 status: .locationStopped,
@@ -141,12 +161,14 @@ final class ServerCoordinator: ObservableObject {
         connectedClientCount = 0
         statusText = "Остановлен"
         refreshLocalIPAddresses()
+        AppLogger.shared.info(.server, "Server stopped")
     }
 
     private func handleLocation(_ location: LocationPayload) {
         guard isRunning else { return }
         lastLocation = location
         statusText = "Передача координат"
+        AppLogger.shared.debug(.server, "Sending location to clients with accuracy \(location.accuracy)m")
 
         tcpServer.updateLatest(
             ServerResponsePayload(
@@ -183,7 +205,14 @@ final class ServerCoordinator: ObservableObject {
     }
 
     private func refreshLocalIPAddresses() {
-        localIPAddresses = NetworkAddressProvider.localIPv4Addresses()
+        let addresses = NetworkAddressProvider.localIPv4Addresses()
+        if addresses != localIPAddresses {
+            AppLogger.shared.info(
+                .network,
+                "Local IP addresses changed: \(addresses.isEmpty ? "none" : addresses.joined(separator: ", "))"
+            )
+        }
+        localIPAddresses = addresses
     }
 
     private func startAddressRefresh() {

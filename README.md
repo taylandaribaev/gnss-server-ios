@@ -57,6 +57,22 @@ is active. Continuous GNSS/location updates and local network serving can
 noticeably increase battery usage. For long trips, keeping the iPhone
 connected to power is recommended.
 
+## Diagnostic Logs
+
+The app includes an in-app diagnostics section with connection hints and log
+export actions. You can copy a short diagnostic summary, share a generated
+`.log` file through the standard iOS Share Sheet, or clear the current in-memory
+logs.
+
+Diagnostic logs include app/device metadata, server state, IP/port, client
+count, location permission state, battery state, recent server/client/location
+events, and counters such as packets sent, heartbeats received, and send
+errors.
+
+Precise coordinates are not included by default. The app has an explicit toggle
+to include precise coordinates in exported logs. If you enable that option,
+review the generated log before sending it to anyone.
+
 ## Credits
 
 Original project: [`DezzK/gnss-share`](https://github.com/DezzK/gnss-share)
