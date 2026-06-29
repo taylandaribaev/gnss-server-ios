@@ -31,6 +31,9 @@
 "diagnostics.copyBrief" = "Скопировать краткую диагностику";
 "diagnostics.shareLog" = "Поделиться лог-файлом";
 "diagnostics.clearLogs" = "Очистить логи";
+"diagnostics.linkTitle" = "Диагностика";
+"diagnostics.logsSection" = "Логи";
+"diagnostics.title" = "Диагностика";
 
 "setup.linkTitle" = "Инструкция по настройке";
 "setup.title" = "Инструкция";

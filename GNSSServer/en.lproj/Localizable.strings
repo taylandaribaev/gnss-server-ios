@@ -31,6 +31,9 @@
 "diagnostics.copyBrief" = "Copy brief diagnostics";
 "diagnostics.shareLog" = "Share log file";
 "diagnostics.clearLogs" = "Clear logs";
+"diagnostics.linkTitle" = "Diagnostics";
+"diagnostics.logsSection" = "Logs";
+"diagnostics.title" = "Diagnostics";
 
 "setup.linkTitle" = "Setup guide";
 "setup.title" = "Guide";

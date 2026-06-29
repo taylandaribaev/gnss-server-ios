@@ -69,33 +69,21 @@ struct ContentView: View {
                 
                 Section {
                     NavigationLink {
+                        DiagnosticsView(
+                            diagnostics: diagnostics,
+                            includePreciseCoordinatesInLogExport: $includePreciseCoordinatesInLogExport,
+                            copyBriefDiagnostics: copyBriefDiagnostics,
+                            shareLogFile: shareLogFile,
+                            clearLogs: clearLogs
+                        )
+                    } label: {
+                        Label(L10n.tr("diagnostics.linkTitle"), systemImage: "stethoscope")
+                    }
+
+                    NavigationLink {
                         SetupGuideView()
                     } label: {
                         Label(L10n.tr("setup.linkTitle"), systemImage: "questionmark.circle")
-                    }
-                }
-
-                Section(L10n.tr("section.diagnostics")) {
-                    ForEach(diagnostics) { item in
-                        DiagnosticRow(item: item)
-                    }
-
-                    Toggle(
-                        L10n.tr("diagnostics.includePreciseCoordinates"),
-                        isOn: $includePreciseCoordinatesInLogExport
-                    )
-
-                    Button(L10n.tr("diagnostics.copyBrief")) {
-                        copyBriefDiagnostics()
-                    }
-
-                    Button(L10n.tr("diagnostics.shareLog")) {
-                        shareLogFile()
-                    }
-
-                    Button(L10n.tr("diagnostics.clearLogs"), role: .destructive) {
-                        AppLogger.shared.clear()
-                        showToast(L10n.tr("toast.logsCleared"))
                     }
                 }
 
@@ -211,6 +199,11 @@ struct ContentView: View {
             showToast(L10n.tr("toast.logFileFailed"))
             AppLogger.shared.error(.export, "Log export failed: \(error.localizedDescription)")
         }
+    }
+
+    private func clearLogs() {
+        AppLogger.shared.clear()
+        showToast(L10n.tr("toast.logsCleared"))
     }
 
     private func showToast(_ message: String) {
@@ -479,6 +472,44 @@ private enum LocationPermissionAlert: Identifiable {
         case .restricted:
             return "restricted"
         }
+    }
+}
+
+private struct DiagnosticsView: View {
+    let diagnostics: [DiagnosticItem]
+    @Binding var includePreciseCoordinatesInLogExport: Bool
+    let copyBriefDiagnostics: () -> Void
+    let shareLogFile: () -> Void
+    let clearLogs: () -> Void
+
+    var body: some View {
+        Form {
+            Section(L10n.tr("section.diagnostics")) {
+                ForEach(diagnostics) { item in
+                    DiagnosticRow(item: item)
+                }
+            }
+
+            Section(L10n.tr("diagnostics.logsSection")) {
+                Toggle(
+                    L10n.tr("diagnostics.includePreciseCoordinates"),
+                    isOn: $includePreciseCoordinatesInLogExport
+                )
+
+                Button(L10n.tr("diagnostics.copyBrief")) {
+                    copyBriefDiagnostics()
+                }
+
+                Button(L10n.tr("diagnostics.shareLog")) {
+                    shareLogFile()
+                }
+
+                Button(L10n.tr("diagnostics.clearLogs"), role: .destructive) {
+                    clearLogs()
+                }
+            }
+        }
+        .navigationTitle(L10n.tr("diagnostics.title"))
     }
 }
 
