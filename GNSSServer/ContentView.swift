@@ -31,14 +31,12 @@ struct ContentView: View {
                     }
 
                     if let error = coordinator.errorText {
-                        Text(error)
-                            .foregroundStyle(.red)
+                        Label(error, systemImage: "exclamationmark.triangle")
                     }
 
-                    Button(coordinator.isRunning ? "Остановить сервер" : "Запустить сервер") {
+                    Button(coordinator.isRunning ? "Остановить сервер" : "Запустить сервер", role: coordinator.isRunning ? .destructive : nil) {
                         handleServerButton()
                     }
-                    .foregroundStyle(coordinator.isRunning ? .red : .blue)
                 }
 
                 Section("Геолокация") {
@@ -435,11 +433,11 @@ private struct ToastView: View {
     var body: some View {
         Text(message)
             .font(.footnote.weight(.medium))
-            .foregroundStyle(.white)
+            .foregroundStyle(.primary)
             .multilineTextAlignment(.center)
             .padding(.horizontal, 14)
             .padding(.vertical, 10)
-            .background(.black.opacity(0.82), in: Capsule())
+            .background(.regularMaterial, in: Capsule())
             .shadow(radius: 8)
     }
 }

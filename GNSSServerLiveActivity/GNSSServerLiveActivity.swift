@@ -1,5 +1,6 @@
 import ActivityKit
 import SwiftUI
+import UIKit
 import WidgetKit
 
 struct GNSSServerLiveActivity: Widget {
@@ -8,7 +9,7 @@ struct GNSSServerLiveActivity: Widget {
             HStack(spacing: 14) {
                 Image(systemName: "location.fill.viewfinder")
                     .font(.title2)
-                    .foregroundStyle(.cyan)
+                    .foregroundStyle(Color.accentColor)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("GNSS Server")
@@ -28,17 +29,17 @@ struct GNSSServerLiveActivity: Widget {
                 Spacer()
 
                 Circle()
-                    .fill(.green)
+                    .fill(Color.accentColor)
                     .frame(width: 10, height: 10)
             }
             .padding()
-            .activityBackgroundTint(Color(red: 0.02, green: 0.08, blue: 0.20))
-            .activitySystemActionForegroundColor(.white)
+            .activityBackgroundTint(Color(.secondarySystemGroupedBackground))
+            .activitySystemActionForegroundColor(.primary)
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
                     Image(systemName: "location.fill.viewfinder")
-                        .foregroundStyle(.cyan)
+                        .foregroundStyle(Color.accentColor)
                 }
                 DynamicIslandExpandedRegion(.center) {
                     Text(context.state.status)
@@ -59,16 +60,15 @@ struct GNSSServerLiveActivity: Widget {
                 }
             } compactLeading: {
                 Image(systemName: "location.fill")
-                    .foregroundStyle(.cyan)
+                    .foregroundStyle(Color.accentColor)
             } compactTrailing: {
                 Text("\(context.state.clientCount)")
-                    .foregroundStyle(.green)
+                    .foregroundStyle(.primary)
             } minimal: {
                 Image(systemName: "location.fill")
-                    .foregroundStyle(.cyan)
+                    .foregroundStyle(Color.accentColor)
             }
-            .keylineTint(.cyan)
+            .keylineTint(Color.accentColor)
         }
     }
 }
-
