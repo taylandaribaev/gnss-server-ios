@@ -1,5 +1,6 @@
 import CoreLocation
 import Foundation
+import UIKit
 
 @MainActor
 final class ServerCoordinator: ObservableObject {
@@ -9,16 +10,31 @@ final class ServerCoordinator: ObservableObject {
     @Published private(set) var errorText: String?
     @Published private(set) var lastLocation: LocationPayload?
     @Published private(set) var locationAuthorizationStatus: CLAuthorizationStatus = .notDetermined
+    @Published private(set) var locationAccuracyAuthorization: CLAccuracyAuthorization = .reducedAccuracy
     @Published private(set) var locationAuthorizationText = "Не запрошено"
     @Published private(set) var precisionText = "Неизвестно"
     @Published private(set) var shouldShowLocationPermissionButton = true
     @Published private(set) var localIPAddresses: [String] = []
+    @Published private(set) var batteryState: UIDevice.BatteryState = .unknown
 
     private let locationService = LocationService()
     private let tcpServer = TCPServer()
     private var addressRefreshTask: Task<Void, Never>?
+    private var batteryStateObserver: NSObjectProtocol?
 
     init() {
+        UIDevice.current.isBatteryMonitoringEnabled = true
+        batteryState = UIDevice.current.batteryState
+        batteryStateObserver = NotificationCenter.default.addObserver(
+            forName: UIDevice.batteryStateDidChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.batteryState = UIDevice.current.batteryState
+            }
+        }
+
         locationService.onLocation = { [weak self] location in
             Task { @MainActor in
                 self?.handleLocation(location)
@@ -60,6 +76,13 @@ final class ServerCoordinator: ObservableObject {
             accuracy: locationService.accuracyAuthorization
         )
         refreshLocalIPAddresses()
+    }
+
+    deinit {
+        if let batteryStateObserver {
+            NotificationCenter.default.removeObserver(batteryStateObserver)
+        }
+        UIDevice.current.isBatteryMonitoringEnabled = false
     }
 
     func requestPermissions() {
@@ -145,6 +168,7 @@ final class ServerCoordinator: ObservableObject {
         accuracy: CLAccuracyAuthorization
     ) {
         locationAuthorizationStatus = status
+        locationAccuracyAuthorization = accuracy
         locationAuthorizationText = switch status {
         case .notDetermined: "Не запрошено"
         case .restricted: "Ограничено"

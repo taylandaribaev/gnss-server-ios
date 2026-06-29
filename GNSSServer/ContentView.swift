@@ -62,6 +62,12 @@ struct ContentView: View {
                     }
                 }
 
+                Section("Диагностика") {
+                    ForEach(diagnostics) { item in
+                        DiagnosticRow(item: item)
+                    }
+                }
+
                 Section {
                     NavigationLink {
                         SetupGuideView()
@@ -162,6 +168,133 @@ struct ContentView: View {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         openURL(url)
     }
+
+    private var diagnostics: [DiagnosticItem] {
+        var items: [DiagnosticItem] = []
+
+        if coordinator.isRunning {
+            if coordinator.connectedClientCount == 0 {
+                items.append(
+                    DiagnosticItem(
+                        title: "Нет клиентов",
+                        detail: "К серверу пока не подключилось ни одно устройство.",
+                        action: "Проверьте, что клиент подключён к той же Wi-Fi сети или точке доступа iPhone, и укажите IP-адрес из блока «Сервер» и порт 8887."
+                    )
+                )
+
+                items.append(
+                    DiagnosticItem(
+                        title: "Локальная сеть может быть не разрешена",
+                        detail: "iOS не даёт приложению напрямую показать статус этого разрешения.",
+                        action: "Если клиент не видит сервер, откройте настройки iOS для GNSS Server и включите доступ к локальной сети."
+                    )
+                )
+            }
+
+            if coordinator.lastLocation == nil {
+                items.append(
+                    DiagnosticItem(
+                        title: "Нет координат",
+                        detail: "Сервер запущен, но iPhone ещё не получил актуальную геопозицию.",
+                        action: "Выйдите на открытое место, включите точную геопозицию и подождите несколько секунд."
+                    )
+                )
+            }
+
+            if coordinator.localIPAddresses.isEmpty {
+                items.append(
+                    DiagnosticItem(
+                        title: "Нет IP-адреса",
+                        detail: "Приложение не нашло локальный IPv4-адрес для подключения клиента.",
+                        action: "Подключите iPhone к Wi-Fi или включите точку доступа, затем проверьте адрес ещё раз."
+                    )
+                )
+            }
+
+            if coordinator.batteryState == .unplugged {
+                items.append(
+                    DiagnosticItem(
+                        title: "iPhone не подключён к питанию",
+                        detail: "Активный GNSS server и фоновая геолокация могут заметно расходовать батарею.",
+                        action: "Для длительных поездок подключите iPhone к зарядке."
+                    )
+                )
+            }
+
+            items.append(
+                DiagnosticItem(
+                    title: "Сервер работает в фоне",
+                    detail: "iOS может ограничивать работу приложений в фоне, особенно после принудительного закрытия.",
+                    action: "Не закрывайте приложение из переключателя приложений, оставьте доступ к геопозиции «Всегда» и следите за Live Activity."
+                )
+            )
+        } else {
+            items.append(
+                DiagnosticItem(
+                    title: "Сервер остановлен",
+                    detail: "Клиенты не смогут подключиться, пока сервер не запущен.",
+                    action: "Нажмите «Запустить сервер» после выдачи разрешений."
+                )
+            )
+        }
+
+        switch coordinator.locationAuthorizationStatus {
+        case .notDetermined:
+            items.append(
+                DiagnosticItem(
+                    title: "Геолокация ещё не разрешена",
+                    detail: "Без геолокации сервер не сможет передавать координаты.",
+                    action: "Нажмите «Запросить разрешения» и разрешите доступ к геопозиции."
+                )
+            )
+        case .restricted:
+            items.append(
+                DiagnosticItem(
+                    title: "Геолокация ограничена",
+                    detail: "Система ограничивает доступ приложения к геопозиции.",
+                    action: "Проверьте настройки устройства и ограничения Screen Time."
+                )
+            )
+        case .denied:
+            items.append(
+                DiagnosticItem(
+                    title: "Геолокация запрещена",
+                    detail: "GNSS Server не сможет работать без доступа к геопозиции.",
+                    action: "Откройте настройки iOS для приложения и разрешите геолокацию."
+                )
+            )
+        case .authorizedWhenInUse:
+            items.append(
+                DiagnosticItem(
+                    title: "Геолокация не «Всегда»",
+                    detail: "С доступом «При использовании» сервер может остановиться после блокировки экрана.",
+                    action: "В настройках iOS выберите доступ к геопозиции «Всегда»."
+                )
+            )
+        case .authorizedAlways:
+            break
+        @unknown default:
+            items.append(
+                DiagnosticItem(
+                    title: "Неизвестный статус геолокации",
+                    detail: "iOS вернула статус разрешения, который приложение не распознало.",
+                    action: "Проверьте настройки геолокации и перезапустите приложение."
+                )
+            )
+        }
+
+        if coordinator.locationAccuracyAuthorization != .fullAccuracy {
+            items.append(
+                DiagnosticItem(
+                    title: "Нет точной геопозиции",
+                    detail: "Координаты могут быть недостаточно точными для GNSS-клиента.",
+                    action: "В настройках геолокации для приложения включите «Точная геопозиция»."
+                )
+            )
+        }
+
+        return items
+    }
 }
 
 private struct SelectableValueRow: View {
@@ -176,6 +309,35 @@ private struct SelectableValueRow: View {
                 .foregroundStyle(.secondary)
                 .textSelection(.enabled)
         }
+    }
+}
+
+private struct DiagnosticItem: Identifiable {
+    let title: String
+    let detail: String
+    let action: String
+
+    var id: String {
+        title
+    }
+}
+
+private struct DiagnosticRow: View {
+    let item: DiagnosticItem
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(item.title)
+                .font(.headline)
+
+            Text(item.detail)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
+            Text(item.action)
+                .font(.subheadline)
+        }
+        .padding(.vertical, 4)
     }
 }
 
