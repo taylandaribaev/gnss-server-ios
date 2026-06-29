@@ -15,7 +15,7 @@
 - Heartbeat клиента: один байт `0x01` каждую секунду
 - Heartbeat timeout: 3 секунды
 - Frame: `[4-byte big-endian payload length][protobuf payload]`
-- Protobuf schema: `../proto/location.proto`
+- Protobuf schema: upstream [`proto/location.proto`](https://github.com/DezzK/gnss-share/blob/main/proto/location.proto)
 - `satellites`: константа `20`, потому что публичный iOS API не предоставляет число GNSS-спутников
 - Live Activity на экране блокировки и Dynamic Island показывает активную передачу,
   число клиентов и завершается сразу после остановки сервера
