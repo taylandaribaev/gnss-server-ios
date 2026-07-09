@@ -31,8 +31,11 @@
 "diagnostics.copyBrief" = "Copy brief diagnostics";
 "diagnostics.shareLog" = "Share log file";
 "diagnostics.clearLogs" = "Clear logs";
+"diagnostics.emptyDetail" = "Current settings look good.";
 "diagnostics.linkTitle" = "Diagnostics";
 "diagnostics.logsSection" = "Logs";
+"diagnostics.summaryOk" = "No issues found";
+"diagnostics.summaryWarnings" = "Issues found: %d";
 "diagnostics.title" = "Diagnostics";
 
 "setup.linkTitle" = "Setup guide";
@@ -90,27 +93,12 @@
 "liveActivity.transmittingLocation" = "Sharing location";
 "liveActivity.serverStopped" = "Server stopped";
 
-"diagnostic.noClients.title" = "No clients";
-"diagnostic.noClients.detail" = "No device has connected to the server yet.";
-"diagnostic.noClients.action" = "Make sure the client is on the same Wi-Fi network or iPhone hotspot, then enter the IP address from the “Server” section and port 8887.";
-"diagnostic.localNetwork.title" = "Local network may not be allowed";
-"diagnostic.localNetwork.detail" = "iOS does not let the app show this permission status directly.";
-"diagnostic.localNetwork.action" = "If the client cannot see the server, open iOS Settings for GNSS Server and enable Local Network access.";
 "diagnostic.noLocation.title" = "No coordinates";
 "diagnostic.noLocation.detail" = "The server is running, but the iPhone has not received a current location yet.";
 "diagnostic.noLocation.action" = "Move to an open area, enable precise location, and wait a few seconds.";
 "diagnostic.noIp.title" = "No IP address";
 "diagnostic.noIp.detail" = "The app did not find a local IPv4 address for the client connection.";
 "diagnostic.noIp.action" = "Connect the iPhone to Wi-Fi or enable Personal Hotspot, then check the address again.";
-"diagnostic.power.title" = "iPhone is not connected to power";
-"diagnostic.power.detail" = "An active GNSS server and background location may noticeably drain the battery.";
-"diagnostic.power.action" = "For long trips, connect the iPhone to a charger.";
-"diagnostic.background.title" = "Server is running in the background";
-"diagnostic.background.detail" = "iOS may limit background app activity, especially after the app is force-closed.";
-"diagnostic.background.action" = "Do not force-close the app, keep location access set to “Always”, and watch the Live Activity.";
-"diagnostic.serverStopped.title" = "Server stopped";
-"diagnostic.serverStopped.detail" = "Clients cannot connect until the server is running.";
-"diagnostic.serverStopped.action" = "Tap “Start server” after granting permissions.";
 "diagnostic.locationNotDetermined.title" = "Location is not allowed yet";
 "diagnostic.locationNotDetermined.detail" = "Without location access, the server cannot send coordinates.";
 "diagnostic.locationNotDetermined.action" = "Tap “Request permissions” and allow location access.";

@@ -31,8 +31,11 @@
 "diagnostics.copyBrief" = "Скопировать краткую диагностику";
 "diagnostics.shareLog" = "Поделиться лог-файлом";
 "diagnostics.clearLogs" = "Очистить логи";
+"diagnostics.emptyDetail" = "Текущие настройки выглядят хорошо";
 "diagnostics.linkTitle" = "Диагностика";
 "diagnostics.logsSection" = "Логи";
+"diagnostics.summaryOk" = "Проблем не найдено";
+"diagnostics.summaryWarnings" = "Есть замечания: %d";
 "diagnostics.title" = "Диагностика";
 
 "setup.linkTitle" = "Инструкция по настройке";
@@ -90,27 +93,12 @@
 "liveActivity.transmittingLocation" = "Передача геопозиции";
 "liveActivity.serverStopped" = "Сервер остановлен";
 
-"diagnostic.noClients.title" = "Нет клиентов";
-"diagnostic.noClients.detail" = "К серверу пока не подключилось ни одно устройство.";
-"diagnostic.noClients.action" = "Проверьте, что клиент подключён к той же Wi-Fi сети или точке доступа iPhone, и укажите IP-адрес из блока «Сервер» и порт 8887.";
-"diagnostic.localNetwork.title" = "Локальная сеть может быть не разрешена";
-"diagnostic.localNetwork.detail" = "iOS не даёт приложению напрямую показать статус этого разрешения.";
-"diagnostic.localNetwork.action" = "Если клиент не видит сервер, откройте настройки iOS для GNSS Server и включите доступ к локальной сети.";
 "diagnostic.noLocation.title" = "Нет координат";
 "diagnostic.noLocation.detail" = "Сервер запущен, но iPhone ещё не получил актуальную геопозицию.";
 "diagnostic.noLocation.action" = "Выйдите на открытое место, включите точную геопозицию и подождите несколько секунд.";
 "diagnostic.noIp.title" = "Нет IP-адреса";
 "diagnostic.noIp.detail" = "Приложение не нашло локальный IPv4-адрес для подключения клиента.";
 "diagnostic.noIp.action" = "Подключите iPhone к Wi-Fi или включите точку доступа, затем проверьте адрес ещё раз.";
-"diagnostic.power.title" = "iPhone не подключён к питанию";
-"diagnostic.power.detail" = "Активный GNSS server и фоновая геолокация могут заметно расходовать батарею.";
-"diagnostic.power.action" = "Для длительных поездок подключите iPhone к зарядке.";
-"diagnostic.background.title" = "Сервер работает в фоне";
-"diagnostic.background.detail" = "iOS может ограничивать работу приложений в фоне, особенно после принудительного закрытия.";
-"diagnostic.background.action" = "Не закрывайте приложение из переключателя приложений, оставьте доступ к геопозиции «Всегда» и следите за Live Activity.";
-"diagnostic.serverStopped.title" = "Сервер остановлен";
-"diagnostic.serverStopped.detail" = "Клиенты не смогут подключиться, пока сервер не запущен.";
-"diagnostic.serverStopped.action" = "Нажмите «Запустить сервер» после выдачи разрешений.";
 "diagnostic.locationNotDetermined.title" = "Геолокация ещё не разрешена";
 "diagnostic.locationNotDetermined.detail" = "Без геолокации сервер не сможет передавать координаты.";
 "diagnostic.locationNotDetermined.action" = "Нажмите «Запросить разрешения» и разрешите доступ к геопозиции.";

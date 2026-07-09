@@ -77,7 +77,10 @@ struct ContentView: View {
                             clearLogs: clearLogs
                         )
                     } label: {
-                        Label(L10n.tr("diagnostics.linkTitle"), systemImage: "stethoscope")
+                        DiagnosticsLinkLabel(
+                            summary: diagnosticsSummaryText,
+                            warningCount: diagnosticsWarningCount
+                        )
                     }
 
                     NavigationLink {
@@ -256,28 +259,22 @@ struct ContentView: View {
         return version
     }
 
+    private var diagnosticsWarningCount: Int {
+        diagnostics.count
+    }
+
+    private var diagnosticsSummaryText: String {
+        if diagnosticsWarningCount == 0 {
+            return L10n.tr("diagnostics.summaryOk")
+        }
+
+        return String(format: L10n.tr("diagnostics.summaryWarnings"), diagnosticsWarningCount)
+    }
+
     private var diagnostics: [DiagnosticItem] {
         var items: [DiagnosticItem] = []
 
         if coordinator.isRunning {
-            if coordinator.connectedClientCount == 0 {
-                items.append(
-                    DiagnosticItem(
-                        title: L10n.tr("diagnostic.noClients.title"),
-                        detail: L10n.tr("diagnostic.noClients.detail"),
-                        action: L10n.tr("diagnostic.noClients.action")
-                    )
-                )
-
-                items.append(
-                    DiagnosticItem(
-                        title: L10n.tr("diagnostic.localNetwork.title"),
-                        detail: L10n.tr("diagnostic.localNetwork.detail"),
-                        action: L10n.tr("diagnostic.localNetwork.action")
-                    )
-                )
-            }
-
             if coordinator.lastLocation == nil {
                 items.append(
                     DiagnosticItem(
@@ -297,32 +294,6 @@ struct ContentView: View {
                     )
                 )
             }
-
-            if coordinator.batteryState == .unplugged {
-                items.append(
-                    DiagnosticItem(
-                        title: L10n.tr("diagnostic.power.title"),
-                        detail: L10n.tr("diagnostic.power.detail"),
-                        action: L10n.tr("diagnostic.power.action")
-                    )
-                )
-            }
-
-            items.append(
-                DiagnosticItem(
-                    title: L10n.tr("diagnostic.background.title"),
-                    detail: L10n.tr("diagnostic.background.detail"),
-                    action: L10n.tr("diagnostic.background.action")
-                )
-            )
-        } else {
-            items.append(
-                DiagnosticItem(
-                    title: L10n.tr("diagnostic.serverStopped.title"),
-                    detail: L10n.tr("diagnostic.serverStopped.detail"),
-                    action: L10n.tr("diagnostic.serverStopped.action")
-                )
-            )
         }
 
         switch coordinator.locationAuthorizationStatus {
@@ -439,6 +410,40 @@ private struct ToastView: View {
     }
 }
 
+private struct DiagnosticsLinkLabel: View {
+    let summary: String
+    let warningCount: Int
+
+    private var hasWarnings: Bool {
+        warningCount > 0
+    }
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: hasWarnings ? "exclamationmark.triangle.fill" : "checkmark.circle")
+                .foregroundStyle(hasWarnings ? .orange : .green)
+                .frame(width: 24)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(L10n.tr("diagnostics.linkTitle"))
+                Text(summary)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            if hasWarnings {
+                Text("\(warningCount)")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .frame(minWidth: 22, minHeight: 22)
+                    .background(.orange, in: Capsule())
+            }
+        }
+    }
+}
+
 private struct DiagnosticRow: View {
     let item: DiagnosticItem
 
@@ -484,9 +489,15 @@ private struct DiagnosticsView: View {
 
     var body: some View {
         Form {
-            Section(L10n.tr("section.diagnostics")) {
-                ForEach(diagnostics) { item in
-                    DiagnosticRow(item: item)
+            if diagnostics.isEmpty {
+                Section {
+                    DiagnosticsEmptyState()
+                }
+            } else {
+                Section(L10n.tr("section.diagnostics")) {
+                    ForEach(diagnostics) { item in
+                        DiagnosticRow(item: item)
+                    }
                 }
             }
 
@@ -510,6 +521,25 @@ private struct DiagnosticsView: View {
             }
         }
         .navigationTitle(L10n.tr("diagnostics.title"))
+    }
+}
+
+private struct DiagnosticsEmptyState: View {
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "checkmark.circle")
+                .foregroundStyle(.green)
+                .frame(width: 24)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(L10n.tr("diagnostics.summaryOk"))
+                    .font(.headline)
+                Text(L10n.tr("diagnostics.emptyDetail"))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.vertical, 4)
     }
 }
 
