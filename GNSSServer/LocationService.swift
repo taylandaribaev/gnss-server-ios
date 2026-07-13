@@ -3,7 +3,7 @@ import Foundation
 
 final class LocationService: NSObject, CLLocationManagerDelegate {
     /// iOS doesn't expose the number of visible/used GNSS satellites via public API.
-    static let unavailableSatelliteCount: Int32 = 20
+    static let unavailableSatelliteCount: Int32 = -1
 
     var onLocation: ((LocationPayload) -> Void)?
     var onAuthorizationChange: ((CLAuthorizationStatus, CLAccuracyAuthorization) -> Void)?

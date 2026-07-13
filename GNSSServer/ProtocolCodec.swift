@@ -17,7 +17,8 @@ enum ProtocolCodec {
     private static func encode(_ response: ServerResponsePayload) -> Data {
         var data = Data()
         data.appendString(field: 1, value: response.status.rawValue)
-        data.appendVarint(field: 2, value: UInt64(response.satellites))
+        // Protobuf `int32` values are sign-extended when encoded as a varint.
+        data.appendVarint(field: 2, value: UInt64(bitPattern: Int64(response.satellites)))
 
         if let location = response.location {
             let encodedLocation = encode(location)
@@ -87,4 +88,3 @@ private extension Data {
         Swift.withUnsafeBytes(of: &bigEndian) { append(contentsOf: $0) }
     }
 }
-

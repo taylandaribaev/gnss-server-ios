@@ -2,7 +2,7 @@ import Foundation
 import Network
 
 final class ClientSession {
-    private static let heartbeatPacket: UInt8 = 0x01
+    private static let heartbeatPackets: Set<UInt8> = [0x01, 0x02]
     private static let heartbeatTimeout: TimeInterval = 3
     private static let responseInterval: TimeInterval = 1
 
@@ -64,7 +64,7 @@ final class ClientSession {
         connection.receive(minimumIncompleteLength: 1, maximumLength: 1) { [weak self] data, _, isComplete, error in
             guard let self else { return }
 
-            if let byte = data?.first, byte == Self.heartbeatPacket {
+            if let byte = data?.first, Self.heartbeatPackets.contains(byte) {
                 self.lastHeartbeat = Date()
                 self.onHeartbeat?(self.id)
                 let latest = self.latestResponse?()
