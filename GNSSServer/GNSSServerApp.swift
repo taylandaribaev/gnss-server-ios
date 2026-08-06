@@ -5,7 +5,7 @@ struct GNSSServerApp: App {
     @StateObject private var coordinator = ServerCoordinator()
 
     init() {
-        AppLogger.shared.info(.app, "GNSS Server app launched")
+        AppLogger.shared.info(.app, "GPS Server app launched")
     }
 
     var body: some Scene {

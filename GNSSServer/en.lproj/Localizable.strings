@@ -4,6 +4,8 @@
 "common.settings" = "Settings";
 "common.yes" = "yes";
 
+"app.title" = "GPS Server";
+
 "section.server" = "Server";
 "section.location" = "Location";
 "section.diagnostics" = "Diagnostics";
@@ -45,7 +47,7 @@
 "setup.permissions.always" = "For stable operation while the screen is locked, choose “Always” location access and enable precise location.";
 "setup.localNetwork.title" = "2. Local network";
 "setup.localNetwork.allow" = "Allow local network access when iOS shows the prompt.";
-"setup.localNetwork.why" = "It is needed so the client device can connect to the GNSS server on this iPhone.";
+"setup.localNetwork.why" = "It is needed so the client device can connect to GPS Server on this iPhone.";
 "setup.network.title" = "3. Wi-Fi or hotspot";
 "setup.network.sameWifi" = "Connect the iPhone and the client device to the same Wi-Fi network.";
 "setup.network.hotspot" = "If there is no shared network, enable Personal Hotspot on the iPhone and connect the client device to it.";
@@ -61,11 +63,11 @@
 "about.versionWithBuild" = "%@ (%@)";
 
 "alert.locationDenied.title" = "Location is disabled";
-"alert.locationDenied.message" = "GNSS Server cannot work without location access. Open iOS Settings and allow location access for this app.";
+"alert.locationDenied.message" = "GPS Server cannot work without location access. Open iOS Settings and allow location access for this app.";
 "alert.whenInUse.title" = "Always access is needed";
 "alert.whenInUse.message" = "With “While Using” access, the server may stop after the screen is locked. For stable background coordinate sharing, choose “Always” location access.";
 "alert.locationRestricted.title" = "Location is restricted";
-"alert.locationRestricted.message" = "iOS is restricting location access for this app. Check device settings, otherwise GNSS Server will not be able to send coordinates.";
+"alert.locationRestricted.message" = "iOS is restricting location access for this app. Check device settings, otherwise GPS Server will not be able to send coordinates.";
 
 "toast.briefDiagnosticsCopied" = "Brief diagnostics copied";
 "toast.logFilePrepared" = "Log file prepared";
@@ -106,7 +108,7 @@
 "diagnostic.locationRestricted.detail" = "The system is restricting this app's location access.";
 "diagnostic.locationRestricted.action" = "Check device settings and Screen Time restrictions.";
 "diagnostic.locationDenied.title" = "Location is denied";
-"diagnostic.locationDenied.detail" = "GNSS Server cannot work without location access.";
+"diagnostic.locationDenied.detail" = "GPS Server cannot work without location access.";
 "diagnostic.locationDenied.action" = "Open iOS Settings for the app and allow location access.";
 "diagnostic.locationWhenInUse.title" = "Location is not “Always”";
 "diagnostic.locationWhenInUse.detail" = "With “While Using” access, the server may stop after the screen is locked.";
@@ -118,7 +120,7 @@
 "diagnostic.reducedAccuracy.detail" = "Coordinates may be insufficiently accurate for the GNSS client.";
 "diagnostic.reducedAccuracy.action" = "In location settings for this app, enable “Precise Location”.";
 
-"briefDiagnostics.title" = "GNSS Server diagnostics";
+"briefDiagnostics.title" = "GPS Server diagnostics";
 "briefDiagnostics.serverRunning" = "Server running: %@";
 "briefDiagnostics.clients" = "Clients: %d";
 "briefDiagnostics.ip" = "IP: %@";

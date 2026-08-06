@@ -4,6 +4,8 @@
 "common.settings" = "Настройки";
 "common.yes" = "да";
 
+"app.title" = "GPS Server";
+
 "section.server" = "Сервер";
 "section.location" = "Геолокация";
 "section.diagnostics" = "Диагностика";
@@ -45,7 +47,7 @@
 "setup.permissions.always" = "Для стабильной работы при заблокированном экране выберите доступ к геопозиции «Всегда» и включите точную геопозицию.";
 "setup.localNetwork.title" = "2. Локальная сеть";
 "setup.localNetwork.allow" = "Разрешите доступ к локальной сети, когда iOS покажет запрос.";
-"setup.localNetwork.why" = "Он нужен, чтобы клиентское устройство могло подключиться к GNSS-серверу на этом iPhone.";
+"setup.localNetwork.why" = "Он нужен, чтобы клиентское устройство могло подключиться к GPS-серверу на этом iPhone.";
 "setup.network.title" = "3. Wi-Fi или точка доступа";
 "setup.network.sameWifi" = "Подключите iPhone и клиентское устройство к одной сети Wi-Fi.";
 "setup.network.hotspot" = "Если общей сети нет, включите точку доступа на iPhone и подключите к ней клиентское устройство.";
@@ -61,11 +63,11 @@
 "about.versionWithBuild" = "%@ (%@)";
 
 "alert.locationDenied.title" = "Геолокация отключена";
-"alert.locationDenied.message" = "GNSS Server не сможет работать без доступа к геолокации. Откройте настройки iOS и разрешите доступ к геопозиции для этого приложения.";
+"alert.locationDenied.message" = "GPS Server не сможет работать без доступа к геолокации. Откройте настройки iOS и разрешите доступ к геопозиции для этого приложения.";
 "alert.whenInUse.title" = "Нужен доступ «Всегда»";
 "alert.whenInUse.message" = "С доступом «При использовании» сервер может остановиться после блокировки экрана. Для стабильной передачи координат в фоне выберите доступ к геопозиции «Всегда».";
 "alert.locationRestricted.title" = "Геолокация ограничена";
-"alert.locationRestricted.message" = "iOS ограничивает доступ к геолокации для этого приложения. Проверьте настройки устройства, иначе GNSS Server не сможет передавать координаты.";
+"alert.locationRestricted.message" = "iOS ограничивает доступ к геолокации для этого приложения. Проверьте настройки устройства, иначе GPS Server не сможет передавать координаты.";
 
 "toast.briefDiagnosticsCopied" = "Краткая диагностика скопирована";
 "toast.logFilePrepared" = "Лог-файл подготовлен";
@@ -106,7 +108,7 @@
 "diagnostic.locationRestricted.detail" = "Система ограничивает доступ приложения к геопозиции.";
 "diagnostic.locationRestricted.action" = "Проверьте настройки устройства и ограничения Screen Time.";
 "diagnostic.locationDenied.title" = "Геолокация запрещена";
-"diagnostic.locationDenied.detail" = "GNSS Server не сможет работать без доступа к геопозиции.";
+"diagnostic.locationDenied.detail" = "GPS Server не сможет работать без доступа к геопозиции.";
 "diagnostic.locationDenied.action" = "Откройте настройки iOS для приложения и разрешите геолокацию.";
 "diagnostic.locationWhenInUse.title" = "Геолокация не «Всегда»";
 "diagnostic.locationWhenInUse.detail" = "С доступом «При использовании» сервер может остановиться после блокировки экрана.";
@@ -118,7 +120,7 @@
 "diagnostic.reducedAccuracy.detail" = "Координаты могут быть недостаточно точными для GNSS-клиента.";
 "diagnostic.reducedAccuracy.action" = "В настройках геолокации для приложения включите «Точная геопозиция».";
 
-"briefDiagnostics.title" = "Диагностика GNSS Server";
+"briefDiagnostics.title" = "Диагностика GPS Server";
 "briefDiagnostics.serverRunning" = "Сервер запущен: %@";
 "briefDiagnostics.clients" = "Клиенты: %d";
 "briefDiagnostics.ip" = "IP: %@";

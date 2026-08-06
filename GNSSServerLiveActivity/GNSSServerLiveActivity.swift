@@ -12,7 +12,7 @@ struct GNSSServerLiveActivity: Widget {
                     .foregroundStyle(Color.accentColor)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("GNSS Server")
+                    Text(L10n.tr("app.title"))
                         .font(.headline)
                     Text(context.state.status)
                         .font(.subheadline)

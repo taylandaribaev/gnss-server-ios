@@ -46,7 +46,7 @@ enum LogExportService {
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
 
         var lines: [String] = [
-            "GNSS Server Diagnostic Log",
+            "GPS Server Diagnostic Log",
             "Generated at: \(formatter.string(from: generatedAt))",
             "",
             "App version: \(appVersion)",
@@ -89,7 +89,7 @@ enum LogExportService {
         let filenameDate = formatter.string(from: generatedAt)
             .replacingOccurrences(of: ":", with: "-")
         let url = FileManager.default.temporaryDirectory
-            .appendingPathComponent("gnss-server-\(filenameDate).log")
+            .appendingPathComponent("gps-server-\(filenameDate).log")
 
         try lines.joined(separator: "\n").write(to: url, atomically: true, encoding: .utf8)
         AppLogger.shared.info(.export, "Diagnostic log exported to \(url.lastPathComponent)")

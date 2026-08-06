@@ -1,6 +1,6 @@
-# GNSS Server for iOS
+# GPS Server for iOS
 
-GNSS Server for iOS is a free and open-source iOS implementation of the
+GPS Server for iOS is a free and open-source iOS implementation of the
 server side for sharing GNSS/location data with clients on the local network.
 
 The project is distributed under the GNU General Public License v3.0
@@ -13,7 +13,7 @@ This project is compatible with the protocol used by
 official port or official app.
 
 - TCP port: `8887`
-- Client heartbeat: one byte `0x01` every second
+- Client heartbeat: one byte `0x01` or `0x02` every second
 - Heartbeat timeout: 3 seconds
 - Frame: `[4-byte big-endian payload length][protobuf payload]`
 - Protobuf schema: upstream [`proto/location.proto`](https://github.com/DezzK/gnss-share/blob/main/proto/location.proto)
@@ -46,13 +46,13 @@ The app enables the iOS `location` background mode. While the server is
 running, Core Location stays active so iOS can continue executing the app
 while the device is locked and can keep serving the TCP listener.
 
-This is required because the app is a live GNSS server: connected clients need
+This is required because the app is a live GPS server: connected clients need
 fresh coordinates even when the iPhone screen is off. Automatic startup and
 Bluetooth logic are not implemented.
 
 ## Battery Usage
 
-GNSS Server for iOS uses foreground and background location while the server
+GPS Server for iOS uses foreground and background location while the server
 is active. Continuous GNSS/location updates and local network serving can
 noticeably increase battery usage. For long trips, keeping the iPhone
 connected to power is recommended.
@@ -89,6 +89,6 @@ here.
 
 ## Disclaimer
 
-GNSS Server for iOS is an unofficial project. It is not affiliated with or
+GPS Server for iOS is an unofficial project. It is not affiliated with or
 endorsed by DezzK or the DezzK/gnss-share project. All references to the
 upstream project are included for attribution and protocol compatibility.

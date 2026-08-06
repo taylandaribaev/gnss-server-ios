@@ -100,7 +100,7 @@ struct ContentView: View {
                     LabeledContent(L10n.tr("about.version"), value: appVersionText)
                 }
             }
-            .navigationTitle("GNSS Server")
+            .navigationTitle(L10n.tr("app.title"))
             .overlay(alignment: .bottom) {
                 if let toastMessage {
                     ToastView(message: toastMessage)

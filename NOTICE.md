@@ -1,6 +1,6 @@
 # NOTICE
 
-GNSS Server for iOS is an unofficial iOS implementation of the server side
+GPS Server for iOS is an unofficial iOS implementation of the server side
 compatible with the protocol used by DezzK/gnss-share.
 
 Original project: https://github.com/DezzK/gnss-share
