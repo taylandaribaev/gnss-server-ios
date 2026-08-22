@@ -61,6 +61,7 @@
 
 "about.version" = "Version";
 "about.versionWithBuild" = "%@ (%@)";
+"about.privacyPolicy" = "Privacy Policy";
 
 "alert.locationDenied.title" = "Location is disabled";
 "alert.locationDenied.message" = "GPS Server cannot work without location access. Open iOS Settings and allow location access for this app.";
