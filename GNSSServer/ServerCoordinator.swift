@@ -4,6 +4,7 @@ import UIKit
 
 @MainActor
 final class ServerCoordinator: ObservableObject {
+    static let shared = ServerCoordinator()
     @Published private(set) var isRunning = false
     @Published private(set) var connectedClientCount = 0
     @Published private(set) var statusText = L10n.tr("status.stopped")

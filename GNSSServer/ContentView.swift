@@ -579,6 +579,12 @@ private struct SetupGuideView: View {
             Section(L10n.tr("setup.client.title")) {
                 Text(L10n.tr("setup.client.connect"))
             }
+
+            Section(L10n.tr("setup.shortcuts.title")) {
+                Text(L10n.tr("setup.shortcuts.description"))
+
+                Text(L10n.tr("setup.shortcuts.permissions"))
+            }
         }
         .navigationTitle(L10n.tr("setup.title"))
     }
