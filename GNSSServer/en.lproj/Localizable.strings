@@ -136,9 +136,9 @@
 "shortcut.stop.title" = "Stop GPS";
 "shortcut.stop.shortTitle" = "Stop GPS";
 "shortcut.stop.description" = "Stops the GPS server without opening the app";
-"shortcut.error.locationDenied" = "Allow "Always" location access in app settings";
+"shortcut.error.locationDenied" = "Allow “Always” location access in app settings";
 "shortcut.error.startFailed" = "Could not start the GPS server";
 
 "setup.shortcuts.title" = "6. Shortcuts and automation";
-"setup.shortcuts.description" = "The shortcuts app includes “Start GPS” and “Stop GPS” actions for automation without opening the app";
-"setup.shortcuts.permissions" = "Before using shortcuts, open the app once and grant "Always" location access";
+"setup.shortcuts.description" = "The Shortcuts app includes “Start GPS” and “Stop GPS” actions for automation without opening the app";
+"setup.shortcuts.permissions" = "Before using shortcuts, open the app once and grant “Always” location access";

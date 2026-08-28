@@ -14,13 +14,8 @@ struct StartGPSServerIntent: AppIntent {
             return .result()
         }
 
-        switch coordinator.locationAuthorizationStatus {
-        case .denied, .restricted:
+        guard coordinator.locationAuthorizationStatus == .authorizedAlways else {
             throw GPSServerIntentError.locationDenied
-        case .authorizedWhenInUse:
-            AppLogger.shared.warn(.server, "Shortcut start: location access is not Always")
-        default:
-            break
         }
 
         coordinator.start()
