@@ -61,6 +61,7 @@
 
 "about.version" = "Version";
 "about.versionWithBuild" = "%@ (%@)";
+"about.privacyPolicy" = "Privacy Policy";
 
 "alert.locationDenied.title" = "Location is disabled";
 "alert.locationDenied.message" = "GPS Server cannot work without location access. Open iOS Settings and allow location access for this app.";
@@ -128,3 +129,16 @@
 "briefDiagnostics.locationPermission" = "Location permission: %@";
 "briefDiagnostics.accuracy" = "Accuracy: %@";
 "briefDiagnostics.items" = "Items:";
+
+"shortcut.start.title" = "Start GPS";
+"shortcut.start.shortTitle" = "Start GPS";
+"shortcut.start.description" = "Starts the GPS server without opening the app";
+"shortcut.stop.title" = "Stop GPS";
+"shortcut.stop.shortTitle" = "Stop GPS";
+"shortcut.stop.description" = "Stops the GPS server without opening the app";
+"shortcut.error.locationDenied" = "Allow “Always” location access in app settings";
+"shortcut.error.startFailed" = "Could not start the GPS server";
+
+"setup.shortcuts.title" = "6. Shortcuts and automation";
+"setup.shortcuts.description" = "The Shortcuts app includes “Start GPS” and “Stop GPS” actions for automation without opening the app";
+"setup.shortcuts.permissions" = "Before using shortcuts, open the app once and grant “Always” location access";

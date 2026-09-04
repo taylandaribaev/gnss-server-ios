@@ -2,8 +2,6 @@ import SwiftUI
 
 @main
 struct GNSSServerApp: App {
-    @StateObject private var coordinator = ServerCoordinator()
-
     init() {
         AppLogger.shared.info(.app, "GPS Server app launched")
     }
@@ -11,7 +9,7 @@ struct GNSSServerApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(coordinator)
+                .environmentObject(ServerCoordinator.shared)
         }
     }
 }

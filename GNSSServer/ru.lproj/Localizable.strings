@@ -61,6 +61,7 @@
 
 "about.version" = "Версия";
 "about.versionWithBuild" = "%@ (%@)";
+"about.privacyPolicy" = "Политика конфиденциальности";
 
 "alert.locationDenied.title" = "Геолокация отключена";
 "alert.locationDenied.message" = "GPS Server не сможет работать без доступа к геолокации. Откройте настройки iOS и разрешите доступ к геопозиции для этого приложения.";
@@ -128,3 +129,16 @@
 "briefDiagnostics.locationPermission" = "Разрешение геолокации: %@";
 "briefDiagnostics.accuracy" = "Точность: %@";
 "briefDiagnostics.items" = "Пункты:";
+
+"shortcut.start.title" = "Запустить GPS";
+"shortcut.start.shortTitle" = "Запустить GPS";
+"shortcut.start.description" = "Запускает GPS-сервер без открытия приложения";
+"shortcut.stop.title" = "Остановить GPS";
+"shortcut.stop.shortTitle" = "Остановить GPS";
+"shortcut.stop.description" = "Останавливает GPS-сервер в фоне без открытия приложения";
+"shortcut.error.locationDenied" = "Разрешите доступ «Всегда» в настройках приложения";
+"shortcut.error.startFailed" = "Не удалось запустить GPS-сервер";
+
+"setup.shortcuts.title" = "6. Команды и автоматизация";
+"setup.shortcuts.description" = "В приложении «Команды» доступны действия «Запустить GPS» и «Остановить GPS» для автоматизации запуска без открытия приложения";
+"setup.shortcuts.permissions" = "Перед использованием команд один раз откройте приложение и выдайте разрешение на геолокацию «Всегда»";

@@ -11,6 +11,8 @@ struct ContentView: View {
     @State private var toastDismissTask: Task<Void, Never>?
     @State private var shareItem: ShareItem?
 
+    private static let privacyPolicyURL = URL(string: "https://github.com/taylandaribaev/gnss-server-ios/blob/main/PRIVACY.md")!
+
     var body: some View {
         NavigationStack {
             Form {
@@ -98,6 +100,10 @@ struct ContentView: View {
 
                 Section(L10n.tr("section.about")) {
                     LabeledContent(L10n.tr("about.version"), value: appVersionText)
+
+                    Link(destination: Self.privacyPolicyURL) {
+                        Label(L10n.tr("about.privacyPolicy"), systemImage: "hand.raised")
+                    }
                 }
             }
             .navigationTitle(L10n.tr("app.title"))
@@ -572,6 +578,12 @@ private struct SetupGuideView: View {
 
             Section(L10n.tr("setup.client.title")) {
                 Text(L10n.tr("setup.client.connect"))
+            }
+
+            Section(L10n.tr("setup.shortcuts.title")) {
+                Text(L10n.tr("setup.shortcuts.description"))
+
+                Text(L10n.tr("setup.shortcuts.permissions"))
             }
         }
         .navigationTitle(L10n.tr("setup.title"))
