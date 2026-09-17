@@ -1,7 +1,7 @@
 import AppIntents
 import CoreLocation
 
-struct StartGPSServerIntent: AppIntent {
+struct StartGPSServerIntent: LiveActivityIntent {
     static var title: LocalizedStringResource = "shortcut.start.title"
     static var description = IntentDescription("shortcut.start.description")
     static var openAppWhenRun = false
@@ -28,7 +28,7 @@ struct StartGPSServerIntent: AppIntent {
     }
 }
 
-struct StopGPSServerIntent: AppIntent {
+struct StopGPSServerIntent: LiveActivityIntent {
     static var title: LocalizedStringResource = "shortcut.stop.title"
     static var description = IntentDescription("shortcut.stop.description")
     static var openAppWhenRun = false
