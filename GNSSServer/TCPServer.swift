@@ -22,7 +22,12 @@ final class TCPServer {
 
     func start() throws {
         AppLogger.shared.info(.server, "Starting TCP server on port \(port)")
-        let parameters = NWParameters.tcp
+        // Frames are small and sent about once a second. With Nagle on, a frame can wait for the ACK of the
+        // previous one (e.g. a heartbeat resend right before a new fix), which with delayed ACK on the client
+        // is up to ~200 ms.
+        let tcpOptions = NWProtocolTCP.Options()
+        tcpOptions.noDelay = true
+        let parameters = NWParameters(tls: nil, tcp: tcpOptions)
         parameters.allowLocalEndpointReuse = true
 
         let listener = try NWListener(using: parameters, on: port)
