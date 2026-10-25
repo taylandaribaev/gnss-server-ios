@@ -44,6 +44,9 @@ enum ProtocolCodec {
         data.appendFloat(field: 5, value: location.accuracy)
         data.appendFloat(field: 6, value: location.bearing)
         data.appendFloat(field: 7, value: location.speed)
+        if let verticalAccuracy = location.verticalAccuracy {
+            data.appendFloat(field: 8, value: verticalAccuracy)
+        }
         data.appendString(field: 9, value: location.provider)
         // Seconds from the fix to this frame, on the monotonic clock.
         let ageNs = max(0, builtAtNs - location.takenAtNs)
@@ -53,6 +56,12 @@ enum ProtocolCodec {
         }
         if let bearingAccuracy = location.bearingAccuracy {
             data.appendFloat(field: 12, value: bearingAccuracy)
+        }
+        if let mslAltitude = location.mslAltitude {
+            data.appendDouble(field: 13, value: mslAltitude)
+            if let verticalAccuracy = location.verticalAccuracy {
+                data.appendFloat(field: 14, value: verticalAccuracy)
+            }
         }
         if location.takenAtNs > 0 {
             data.appendVarint(field: 15, value: UInt64(location.takenAtNs))

@@ -29,6 +29,7 @@ struct LocationPayload: Sendable {
     let timestamp: Int64
     let latitude: Double
     let longitude: Double
+    /// Height above the WGS 84 ellipsoid, like the schema's `altitude` (4). 0 when Core Location has none.
     let altitude: Double
     let accuracy: Float
     let bearing: Float
@@ -42,6 +43,10 @@ struct LocationPayload: Sendable {
     /// can tell "unknown" from 0.
     let speedAccuracy: Float?
     let bearingAccuracy: Float?
+    /// Core Location gives one `verticalAccuracy` for both heights.
+    let verticalAccuracy: Float?
+    /// Height above mean sea level (`CLLocation.altitude`).
+    let mslAltitude: Double?
 }
 
 struct ServerResponsePayload: Sendable {

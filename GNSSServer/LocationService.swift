@@ -99,18 +99,23 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
         // Core Location uses negative values for "not available".
         let courseValid = location.course >= 0
         let speedValid = location.speed >= 0
+        let altitudeValid = location.verticalAccuracy >= 0
         let payload = LocationPayload(
             timestamp: Int64(location.timestamp.timeIntervalSince1970 * 1_000),
             latitude: location.coordinate.latitude,
             longitude: location.coordinate.longitude,
-            altitude: location.verticalAccuracy >= 0 ? location.altitude : 0,
+            // The schema's `altitude` (4) is ellipsoidal. `CLLocation.altitude` is MSL and goes into
+            // `msl_altitude` (13). The two differ by the geoid height, which can be tens of meters.
+            altitude: altitudeValid ? location.ellipsoidalAltitude : 0,
             accuracy: Float(max(location.horizontalAccuracy, 0)),
             bearing: Float(courseValid ? location.course : 0),
             speed: Float(speedValid ? location.speed : 0),
             provider: "fused",
             takenAtNs: MonotonicClock.nowNs() - ageNs,
             speedAccuracy: speedValid && location.speedAccuracy >= 0 ? Float(location.speedAccuracy) : nil,
-            bearingAccuracy: courseValid && location.courseAccuracy >= 0 ? Float(location.courseAccuracy) : nil
+            bearingAccuracy: courseValid && location.courseAccuracy >= 0 ? Float(location.courseAccuracy) : nil,
+            verticalAccuracy: altitudeValid ? Float(location.verticalAccuracy) : nil,
+            mslAltitude: altitudeValid ? location.altitude : nil
         )
         AppLogger.shared.debug(.location, "Location update received with accuracy \(payload.accuracy)m")
         onLocation?(payload)

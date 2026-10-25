@@ -20,6 +20,11 @@ official port or official app.
 - `satellites`: `-1`, because public iOS APIs do not expose the visible/used
   GNSS satellite count; `satellites_used_in_fix` (5) and the per-satellite
   details a `0x02` heartbeat asks for are left out for the same reason
+- `altitude` (4): height above the WGS 84 ellipsoid
+  (`CLLocation.ellipsoidalAltitude`), as the schema defines it. The height above
+  mean sea level goes in `msl_altitude` (13). With no valid altitude, `altitude`
+  is `0` and fields 8, 13 and 14 are left out, so the client knows the `0` is
+  not a real value
 - `location_age` (10): seconds from the fix to the moment the update is built.
   Core Location stamps a fix with the wall clock only, so the stretch up to the
   delegate callback is read there; from the callback on, the monotonic clock
@@ -31,6 +36,9 @@ official port or official app.
   clients that do not know them skip them:
   - `speed_accuracy` (11, float, m/s) from `CLLocation.speedAccuracy`
   - `bearing_accuracy` (12, float, degrees) from `CLLocation.courseAccuracy`
+  - `vertical_accuracy` (8, float, m) from `CLLocation.verticalAccuracy`
+  - `msl_altitude` (13, double) from `CLLocation.altitude` and
+    `msl_altitude_accuracy` (14, float) from `verticalAccuracy`
   - `server_monotonic_ns` (15, int64): the fix's moment on the monotonic clock,
     estimated as the callback's moment less the fix's age. Only differences
     between two fixes mean anything: the interval between the fixes, free of
