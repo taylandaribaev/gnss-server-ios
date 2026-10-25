@@ -32,6 +32,7 @@
 		100000000000000000000018 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000002 /* InfoPlist.strings */; };
 		100000000000000000000019 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20000000000000000000001B /* LaunchScreen.storyboard */; };
 		10000000000000000000001A /* GNSSServerIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20000000000000000000001C /* GNSSServerIntents.swift */; };
+		10000000000000000000001B /* DiscoveryResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20000000000000000000001D /* DiscoveryResponder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +87,7 @@
 		20000000000000000000001A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		20000000000000000000001B /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		20000000000000000000001C /* GNSSServerIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GNSSServerIntents.swift; sourceTree = "<group>"; };
+		20000000000000000000001D /* DiscoveryResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryResponder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +129,7 @@
 				20000000000000000000001C /* GNSSServerIntents.swift */,
 				200000000000000000000005 /* LocationService.swift */,
 				200000000000000000000007 /* TCPServer.swift */,
+				20000000000000000000001D /* DiscoveryResponder.swift */,
 				20000000000000000000000D /* NetworkAddressProvider.swift */,
 				200000000000000000000006 /* ClientSession.swift */,
 				200000000000000000000004 /* ProtocolCodec.swift */,
@@ -272,6 +275,7 @@
 				100000000000000000000005 /* LocationService.swift in Sources */,
 				100000000000000000000006 /* ClientSession.swift in Sources */,
 				100000000000000000000007 /* TCPServer.swift in Sources */,
+				10000000000000000000001B /* DiscoveryResponder.swift in Sources */,
 				100000000000000000000009 /* ServerCoordinator.swift in Sources */,
 				10000000000000000000000B /* NetworkAddressProvider.swift in Sources */,
 				10000000000000000000000C /* LocationSharingActivityAttributes.swift in Sources */,

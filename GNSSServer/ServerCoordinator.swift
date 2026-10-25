@@ -21,6 +21,7 @@ final class ServerCoordinator: ObservableObject {
 
     private let locationService = LocationService()
     private let tcpServer = TCPServer()
+    private let discoveryResponder = DiscoveryResponder()
     private var addressRefreshTask: Task<Void, Never>?
     private var batteryStateObserver: NSObjectProtocol?
     private var batteryLevelObserver: NSObjectProtocol?
@@ -82,6 +83,7 @@ final class ServerCoordinator: ObservableObject {
                 self?.statusText = L10n.tr("status.serverError")
                 self?.isRunning = false
                 self?.locationService.stop()
+                self?.discoveryResponder.stop()
             }
         }
 
@@ -115,6 +117,7 @@ final class ServerCoordinator: ObservableObject {
 
         do {
             try tcpServer.start()
+            discoveryResponder.start()
             isRunning = true
             statusText = L10n.tr("status.awaitingCoordinates")
             AppLogger.shared.info(.server, "Server started successfully")
@@ -153,6 +156,7 @@ final class ServerCoordinator: ObservableObject {
             broadcast: true
         )
         tcpServer.stop()
+        discoveryResponder.stop()
         locationService.stop()
         LiveActivityService.shared.stop()
         addressRefreshTask?.cancel()

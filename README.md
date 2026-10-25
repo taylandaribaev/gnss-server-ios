@@ -13,6 +13,14 @@ This project is compatible with the protocol used by
 official port or official app.
 
 - TCP port: `8887`
+- UDP discovery on port `8887`: the app answers a client's
+  `GNSS_SHARE_DISCOVERY_PROBE_1` with `GNSS_SHARE_DISCOVERY_REPLY_1`, and the
+  client takes the reply's source address as the server's. It never
+  announces itself. iOS does not deliver the broadcast probes to an app
+  without the multicast networking entitlement, so the iPhone answers the
+  unicast probes of the client's sweep, which the client runs on networks of
+  /24 or narrower. On the iPhone's own hotspot the client finds it as its
+  gateway; on wider networks the address has to be typed in
 - Client heartbeat: one byte `0x01` or `0x02` every second
 - Heartbeat timeout: 3 seconds
 - Frame: `[4-byte big-endian payload length][protobuf payload]`
