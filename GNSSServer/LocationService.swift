@@ -89,6 +89,12 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
+        // A negative horizontalAccuracy means the coordinate isn't valid. Sending it would look like a fix with
+        // 0 m accuracy, so skip it. Clients keep the last good fix, same as between updates.
+        guard location.horizontalAccuracy >= 0, CLLocationCoordinate2DIsValid(location.coordinate) else {
+            AppLogger.shared.debug(.location, "Location update without a valid position skipped")
+            return
+        }
         if manager.accuracyAuthorization != .fullAccuracy {
             AppLogger.shared.warn(.location, "Location accuracy is reduced")
         }
