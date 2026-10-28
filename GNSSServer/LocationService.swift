@@ -93,16 +93,24 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
             AppLogger.shared.warn(.location, "Location accuracy is reduced")
         }
 
+        // CLLocation only has a wall-clock timestamp. Measure the age on the wall clock, then move it to the
+        // monotonic clock, so a clock change between two fixes doesn't change the interval between them.
+        let ageNs = MonotonicClock.ns(fromSeconds: -location.timestamp.timeIntervalSinceNow)
+        // Core Location uses negative values for "not available".
+        let courseValid = location.course >= 0
+        let speedValid = location.speed >= 0
         let payload = LocationPayload(
             timestamp: Int64(location.timestamp.timeIntervalSince1970 * 1_000),
             latitude: location.coordinate.latitude,
             longitude: location.coordinate.longitude,
             altitude: location.verticalAccuracy >= 0 ? location.altitude : 0,
             accuracy: Float(max(location.horizontalAccuracy, 0)),
-            bearing: Float(location.course >= 0 ? location.course : 0),
-            speed: Float(location.speed >= 0 ? location.speed : 0),
+            bearing: Float(courseValid ? location.course : 0),
+            speed: Float(speedValid ? location.speed : 0),
             provider: "fused",
-            locationAge: Float(max(0, -location.timestamp.timeIntervalSinceNow))
+            takenAtNs: MonotonicClock.nowNs() - ageNs,
+            speedAccuracy: speedValid && location.speedAccuracy >= 0 ? Float(location.speedAccuracy) : nil,
+            bearingAccuracy: courseValid && location.courseAccuracy >= 0 ? Float(location.courseAccuracy) : nil
         )
         AppLogger.shared.debug(.location, "Location update received with accuracy \(payload.accuracy)m")
         onLocation?(payload)

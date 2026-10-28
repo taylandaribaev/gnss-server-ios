@@ -5,29 +5,37 @@ import Foundation
 /// The project only sends protobuf messages and receives a one-byte heartbeat,
 /// so a compact encoder keeps this prototype dependency-free while remaining
 /// byte-compatible with the Android client.
+///
+/// Optional fields are only written when they have a value, so the client can
+/// tell whether the server knows it. Older clients skip fields they don't know.
+/// `satellites_used_in_fix` (5) is never written because iOS doesn't expose it,
+/// and the per-satellite details (heartbeat `0x02`) are never filled for the
+/// same reason.
 enum ProtocolCodec {
-    static func frame(_ response: ServerResponsePayload) -> Data {
-        let payload = encode(response)
+    /// `builtAtNs`: when the frame is built, on `MonotonicClock`. `location_age`
+    /// is measured up to this moment.
+    static func frame(_ response: ServerResponsePayload, builtAtNs: Int64 = MonotonicClock.nowNs()) -> Data {
+        let payload = encode(response, builtAtNs: builtAtNs)
         var framed = Data()
         framed.appendUInt32BigEndian(UInt32(payload.count))
         framed.append(payload)
         return framed
     }
 
-    private static func encode(_ response: ServerResponsePayload) -> Data {
+    private static func encode(_ response: ServerResponsePayload, builtAtNs: Int64) -> Data {
         var data = Data()
         data.appendString(field: 1, value: response.status.rawValue)
         // Protobuf `int32` values are sign-extended when encoded as a varint.
         data.appendVarint(field: 2, value: UInt64(bitPattern: Int64(response.satellites)))
 
         if let location = response.location {
-            let encodedLocation = encode(location)
+            let encodedLocation = encode(location, builtAtNs: builtAtNs)
             data.appendLengthDelimited(field: 3, value: encodedLocation)
         }
         return data
     }
 
-    private static func encode(_ location: LocationPayload) -> Data {
+    private static func encode(_ location: LocationPayload, builtAtNs: Int64) -> Data {
         var data = Data()
         data.appendVarint(field: 1, value: UInt64(bitPattern: location.timestamp))
         data.appendDouble(field: 2, value: location.latitude)
@@ -37,7 +45,18 @@ enum ProtocolCodec {
         data.appendFloat(field: 6, value: location.bearing)
         data.appendFloat(field: 7, value: location.speed)
         data.appendString(field: 9, value: location.provider)
-        data.appendFloat(field: 10, value: location.locationAge)
+        // Seconds from the fix to this frame, on the monotonic clock.
+        let ageNs = max(0, builtAtNs - location.takenAtNs)
+        data.appendFloat(field: 10, value: Float(Double(ageNs) / Double(MonotonicClock.nsPerSecond)))
+        if let speedAccuracy = location.speedAccuracy {
+            data.appendFloat(field: 11, value: speedAccuracy)
+        }
+        if let bearingAccuracy = location.bearingAccuracy {
+            data.appendFloat(field: 12, value: bearingAccuracy)
+        }
+        if location.takenAtNs > 0 {
+            data.appendVarint(field: 15, value: UInt64(location.takenAtNs))
+        }
         return data
     }
 }

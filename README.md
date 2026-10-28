@@ -18,7 +18,23 @@ official port or official app.
 - Frame: `[4-byte big-endian payload length][protobuf payload]`
 - Protobuf schema: upstream [`proto/location.proto`](https://github.com/DezzK/gnss-share/blob/main/proto/location.proto)
 - `satellites`: `-1`, because public iOS APIs do not expose the visible/used
-  GNSS satellite count
+  GNSS satellite count; `satellites_used_in_fix` (5) and the per-satellite
+  details a `0x02` heartbeat asks for are left out for the same reason
+- `location_age` (10): seconds from the fix to the moment the update is built.
+  Core Location stamps a fix with the wall clock only, so the stretch up to the
+  delegate callback is read there; from the callback on, the monotonic clock
+  (`CLOCK_MONOTONIC_RAW`, which counts sleep like Android's
+  `elapsedRealtimeNanos`) is used
+- Newer `optional` fields of the schema, sent only when Core Location has a
+  valid value, so a client can tell "unknown" from `0`. They are not in the
+  version of the schema linked above, so here are their numbers and types;
+  clients that do not know them skip them:
+  - `speed_accuracy` (11, float, m/s) from `CLLocation.speedAccuracy`
+  - `bearing_accuracy` (12, float, degrees) from `CLLocation.courseAccuracy`
+  - `server_monotonic_ns` (15, int64): the fix's moment on the monotonic clock,
+    estimated as the callback's moment less the fix's age. Only differences
+    between two fixes mean anything: the interval between the fixes, free of
+    the delays after the callback (the network, the client)
 - Live Activity on the Lock Screen and Dynamic Island shows active
   transmission, client count, and ends immediately after the server stops
 
