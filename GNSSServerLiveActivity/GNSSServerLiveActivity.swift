@@ -19,8 +19,12 @@ struct GNSSServerLiveActivity: Widget {
                         .foregroundStyle(.secondary)
 
                     HStack(spacing: 12) {
-                        Label("\(context.state.clientCount)", systemImage: "network")
-                        Text("TCP \(context.attributes.port)")
+                        Label {
+                            Text(verbatim: "\(context.state.clientCount)")
+                        } icon: {
+                            Image(systemName: "network")
+                        }
+                        Text(verbatim: "TCP \(context.attributes.port)")
                     }
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -40,29 +44,36 @@ struct GNSSServerLiveActivity: Widget {
                 DynamicIslandExpandedRegion(.leading) {
                     Image(systemName: "location.fill.viewfinder")
                         .foregroundStyle(Color.accentColor)
+                        .padding(.leading, 8)
                 }
                 DynamicIslandExpandedRegion(.center) {
                     Text(context.state.status)
                         .font(.headline)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Label("\(context.state.clientCount)", systemImage: "network")
-                        .font(.caption)
+                    Label {
+                        Text(verbatim: "\(context.state.clientCount)")
+                    } icon: {
+                        Image(systemName: "network")
+                    }
+                    .font(.caption)
+                    .padding(.trailing, 8)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     HStack {
                         Text(L10n.tr("liveActivity.transmittingLocation"))
                         Spacer()
-                        Text("TCP \(context.attributes.port)")
+                        Text(verbatim: "TCP \(context.attributes.port)")
                     }
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                    .padding(.horizontal, 8)
                 }
             } compactLeading: {
                 Image(systemName: "location.fill")
                     .foregroundStyle(Color.accentColor)
             } compactTrailing: {
-                Text("\(context.state.clientCount)")
+                Text(verbatim: "\(context.state.clientCount)")
                     .foregroundStyle(.primary)
             } minimal: {
                 Image(systemName: "location.fill")

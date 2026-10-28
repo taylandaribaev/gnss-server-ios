@@ -368,12 +368,12 @@
 				INFOPLIST_FILE = GNSSServer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "GPS Server";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tailan.gnssserver.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -398,12 +398,12 @@
 				INFOPLIST_FILE = GNSSServer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "GPS Server";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tailan.gnssserver.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -426,13 +426,13 @@
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = GNSSServerLiveActivity/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "GPS Server";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tailan.gnssserver.ios.liveactivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -455,13 +455,13 @@
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = GNSSServerLiveActivity/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "GPS Server";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tailan.gnssserver.ios.liveactivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
